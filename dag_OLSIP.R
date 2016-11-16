@@ -14,9 +14,9 @@ subgraph <- function(adj.matrix,data,max.parent=3){
                        lapply(1:nrow(subgraph),function(i){
                          cbind(subpath(subgraph[i,],max.parent = 3),i)
                        }))
-    return(list(info=comps,subdata=subdata,subgraph=subgraph,subpath=subpath))
+    return(list(subdata=subdata,subgraph=subgraph,subpath=subpath))
   })
-  return(sub.graph)
+  return(list(info=comps,subgraph=sub.graph)
 }
 
 #provide all potential subpaths in the graph under the limitation of max parent
@@ -89,9 +89,16 @@ ip <- function(x.graph,x.path,x.cost){
 
 #process
 
-x.graphs <- subgraph(adj.matrix=sem>=.8,data=Y,max.parent=5)
-x.costs <- lapply(x.graphs,get_score_lm)
-x.ip <- lapply(1:length(x.graphs),function(i){
-  ip(x.graphs[[i]]$subgraph,x.graphs[[i]]$subpath,x.costs[[i]])
+x.graphs <- subgraph(adj.matrix=sem>=.8,data=Y,max.parent=4)
+x.costs <- lapply(x.graphs$subgraph,get_score_lm)
+x.ip <- lapply(1:length(x.graphs$subgraph),function(i){
+  ip(x.graphs$subgraph[[i]]$subgraph,x.graphs$subgraph[[i]]$subpath,x.costs[[i]])
 })
+
+adj <- array(0,dim=dim(sem))
+j <- 0
+for(i in unique(x.graphs$info$membership)[x.graphs$info$csize>1]){
+  j <- j+1
+  adj[x.graphs$info$membership==i,x.graphs$info$membership==i] <- x.ip[[j]]
+}
 
