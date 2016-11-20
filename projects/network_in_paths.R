@@ -358,7 +358,15 @@ for(i in 1:44){
   save(rlt,file='sem3.rda')
 }
 
-#
+
+#Check
+
+load('C:\\Users\\zhu2\\Documents\\network_final\\sem3.rda')
+par(mfrow=c(3,3));for(i in 1:44){
+  if(!is.null(rlt[[i]][[3]])){plotnet(rlt[[i]][[3]]>0.1)}
+  print(sum(rlt[[i]][[3]]>0))
+}
+
 
 
 
