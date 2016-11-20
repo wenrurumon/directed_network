@@ -1,10 +1,11 @@
 
 rm(list=ls())
 
-#####################################################
-# SEM
-#####################################################
+#################################
+# SEM-Preprocess
+#################################
 
+#bind to array
 abind <- function(...){
   x <- list(...)
   rlt <- array(NA,dim=c(dim(x[[1]]),length(x)))
@@ -12,7 +13,71 @@ abind <- function(...){
   return(rlt)
 }
 
-sem_l1 <- function(Y,X=NULL,adj=NULL,lambda=0.1,times=10,stability=0.8){
+#ADJ aggregation
+adj.group <- function(dag,Y.group){
+  dag.group <- matrix(0,max(Y.group),max(Y.group))
+  for(i in 1:nrow(dag.group)){
+    for(j in 1:ncol(dag.group)){
+      dag.group[j,i] <- sum(apply(dag[Y.group==i,Y.group==j,drop=F],1,max))
+    }
+  }
+  return(dag.group)
+}
+
+#single directed score
+mat.sds <- function(dag.group){
+  dag_sel <- apply(abind(dag.group,t(dag.group)),1:2,function(x){which(x==max(x))[1]})
+  dag.group[dag_sel==2] <- 0; diag(dag.group) <- 0
+  dag.group
+}
+
+#################################
+# SEM-Undirected Structure
+#################################
+
+#SEM L1
+sem_l1 <- function(Y,lambda=0.1,times=10){
+  adjs <- lapply(1:times,function(i){
+    Y <- Y[sample(1:nrow(Y),nrow(Y)*2/3),]
+    adj <- do.call(rbind,lapply(1:ncol(Y),function(i){
+      slimi <- slim(X=Y[,-i],Y=Y[,i],lambda=lambda,
+                    rho=1,method='lasso',verbose=FALSE)
+      temp <- rep(FALSE,ncol(Y))
+      temp[-i][which(slimi$beta!=0)] <- TRUE
+      temp
+    }))
+  })
+  adj <- apply(do.call(abind,adjs),1:2,mean)
+  return(adj)
+}
+
+#SEM Group Lasso
+sem_grplasso <- function(Y
+                         ,Y.group=rep(1:ncol(Y))
+                         ,Y.prop=(1/tapply(Y.group,Y.group,length))[Y.group]
+                         ,lambda=.1,times=10){
+  adjs <- lapply(1:times,function(i){
+    Y <- Y[sample(1:nrow(Y),nrow(Y)*2/3),]
+    adj <- do.call(rbind,lapply(1:ncol(Y),function(i){
+      lambda <- lambdamax(x=cbind(1,Y[,-i]),y=Y[,i], 
+                          index=c(NA,Y.group[-i]), 
+                          penscale = sqrt, model = LinReg(),
+                          center=TRUE,standardized=TRUE) * 0.5^(1/lambda-1)
+      fit <- grplasso(x=cbind(1,Y[,-i]),y=Y[,i],
+                      index=c(NA,Y.group[-i]),lambda=lambda,model=LinReg(),
+                      penscale = sqrt,
+                      control = grpl.control(update.hess = "lambda", trace = 0))
+      temp <- rep(0,ncol(Y))
+      temp[-i] <- coef(fit)[-1]
+      temp!=0
+    }))
+  })
+  adj <- apply(do.call(abind,adjs),1:2,mean)
+  return(adj)
+}
+
+#SEM L1 with parameter estimation and X connected
+sem_l1_YX <- function(Y,X=NULL,adj=NULL,lambda=0.1,times=10,stability=0.8){
   #Lasso Network cross Y
   if(is.null(adj)|is.null(X)){
     adjs <- lapply(1:times,function(i){
@@ -83,29 +148,33 @@ sem_l1 <- function(Y,X=NULL,adj=NULL,lambda=0.1,times=10,stability=0.8){
   return(list(adj=adjYX,model=model))
 }
 
-sem_grplasso <- function(Y,Y.group=rep(1:ncol(Y)),Y.prop=(1/tapply(Y.group,Y.group,length))[Y.group]
-                         ,lambda=1,times=10,stability=0.8){
+#grouplasso model with L1 regulazation applied
+sem_grplasso2 <- function(Y
+                          ,Y.group=rep(1:ncol(Y))
+                          ,Y.prop=(1/tapply(Y.group,Y.group,length))[Y.group]
+                          ,lambda1=.5,lambda2=.3,times=10,stability=.8){
   #Group Lasso Network
+  sem1 <- sem_grplasso(Y,Y.group,lambda=lambda1,times=times)
+  adj <- (sem1>=stability)
+  #L1 Penalty
   adjs <- lapply(1:times,function(i){
     Y <- Y[sample(1:nrow(Y),nrow(Y)*2/3),]
-    adj <- do.call(rbind,lapply(1:ncol(Y),function(i){
-      lambda <- lambdamax(x=cbind(1,Y[,-i]),y=Y[,i], 
-                          index=c(NA,Y.group[-i]), 
-                          penscale = sqrt, model = LinReg(),
-                          center=TRUE,standardized=TRUE) * 0.5^(1/lambda-1)
-      fit <- grplasso(x=cbind(1,Y[,-i]),y=Y[,i],
-                      index=c(NA,Y.group[-i]),lambda=lambda,model=LinReg(),
-                      penscale = sqrt,
-                      control = grpl.control(update.hess = "lambda", trace = 0))
-      temp <- rep(0,ncol(Y))
-      temp[-i] <- coef(fit)[-1]
-      temp!=0
+    adj <- do.call(rbind,lapply(1:nrow(adj),function(j){
+      temp <- adj[j,]
+      if(sum(temp)==0){return(temp)}
+      Yj <- Y[,j,drop=F]
+      Xj <- Y[,temp,drop=F]
+      slimi <- slim(X=Xj,Y=Yj,lambda=lambda2,rho=1,method='lasso',verbose=FALSE)
+      temp[temp] <- (slimi$beta!=0)
+      return(temp)
     }))
+    return(adj)
   })
-  adj <- apply(do.call(abind,adjs),1:2,mean)
-  #Summarise network
-  return(list(adj=adj))
+  sem2 <- apply(do.call(abind,adjs),1:2,mean)
+  #Result
+  list(sem_l1=sem1,sem_grplasso=sem2)
 }
+
 
 #####################################################
 # Preprocess
@@ -241,22 +310,17 @@ test <- function(i,max_parent=3
   Y.group <- rep(1:length(y),sapply(y,function(x){which(x$prop>=prop)[1]}))
   #SEM
   if(method==1){
-    system.time(sem <- sem_l1(Y,lambda=lambda,times=times,stability=stability))
+    system.time(sem1 <- sem_l1(Y,lambda=lambda,times=times))
+    sem <- sem1
   } else {
-    system.time(sem <- sem_grplasso(Y,Y.group,Y.prop,lambda,times,stability))
+    system.time(sem2 <- sem_grplasso2(Y,Y.group,Y.prop,lambda1=lambda,lambda2=0.1,times,stability)[[2]])
+    sem <- sem2
   } 
   #CNIF
-  dag <- CNIF(Y,init.adj=sem[[1]]>=0.8,max_parent = max_parent)*Y.prop
-  dag.group <- matrix(0,max(Y.group),max(Y.group))
-  for(i in 1:nrow(dag.group)){
-    for(j in 1:ncol(dag.group)){
-      # print(paste(i,j))
-      dag.group[j,i] <- sum(apply(dag[Y.group==i,Y.group==j,drop=F],1,max))
-    }
-  }
+  dag <- CNIF(Y,init.adj=(sem>=0.8),max_parent = max_parent)*Y.prop
   #Summary
-  dag_sel <- apply(abind(dag.group,t(dag.group)),1:2,function(x){which(x==max(x))[1]})
-  dag.group[dag_sel==2] <- 0; diag(dag.group) <- 0
+  dag.group <- adj.group(dag,Y.group)
+  dag.group <- mat.sds(dag.group)
   dimnames(dag.group) <- list(names(input),names(input))
   #Output
   out <- list(Y=Y,dag=dag,daggroup=dag.group)
@@ -275,40 +339,26 @@ test2 <- function(i,max_parent = 3){
     out <- list(Y=Y,dag=NULL,daggroup=NULL)
     return(out)
   } else {
-    test(i,method=1, times=100 ,max_parent = max_parent)
+    test(i,method=2, times=100 ,max_parent = max_parent)
   }
 }
 
 #Test
-if(FALSE){
 
 setwd('C:\\Users\\zhu2\\Documents\\network_final')
 i <- 0
 rlt <- list()
 
-plotnet(rlti[[3]]>0)
-rlt[[i]] <- rlti
-save(rlt,file='sem1.rda')
-i <- i+1;print(i)
-gc(); system.time(rlti <- try(test2(i,max_parent=3))); gc()
-if(!is.list(rlti)){gc(); system.time(rlti <- try(test2(i,max_parent=2))); gc()}
-
-}
-
-#Check
-
-load('C:\\Users\\zhu2\\Documents\\network_final\\sem1.rda')
-par(mfrow=c(3,3))
 for(i in 1:44){
-  if(is.null(rlt[[i]][[3]])){
-    rlt[[i]][[2]] <- matrix(0,ncol(rlt[[i]][[1]]),ncol(rlt[[i]][[1]]))
-    dimnames(rlt[[i]][[2]]) <- list(colnames(rlt[[i]][[1]]),colnames(rlt[[i]][[1]]))
-    rlt[[i]][[3]] <- matrix(1,1,1)
-    dimnames(rlt[[i]][[3]]) <- list(pathway.map[[i]],pathway.map[[i]])
-  }
-  plotnet(rlt[[i]][[3]]>=.3,'directed')
+  print(i)
+  gc(); system.time(rlti <- try(test2(i,max_parent=3))); gc()
+  if(!is.list(rlti)){gc(); system.time(rlti <- try(test2(i,max_parent=2))); gc()}
+  rlt[[i]] <- rlti
+  names(rlt)[i] <- names(pathway.group)[i]
+  save(rlt,file='sem3.rda')
 }
 
+#
 
 
 
