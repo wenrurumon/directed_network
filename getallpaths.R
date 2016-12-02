@@ -1,20 +1,37 @@
 
 library(igraph)
 library(dplyr)
+
 rm(list=ls())
+
 setwd('C:\\Users\\zhu2\\Documents\\getpathway')
 raw <- as.matrix(read.csv('20161026network.csv'))
 # g <- raw[grepl('pheno::',raw[,1])&grepl('pheno::',raw[,2]),]
 g <- cbind(raw[,2],raw[,1])
 g <- graph_from_data_frame(g)
 plot(g)
+
 #find path
-from = "geno::CREBBP"
-to = 'disease::AD'
 getpath <- function(g,from,to){
       key <- colnames(as_adjacency_matrix(g))
       from <- grep(from,key)
       to <- grep(to,key)
-      igraph::all_simple_paths(g,from,to)
+      out <- igraph::all_simple_paths(g,from,to)
+      out <- lapply(out,function(x) paste(names(x),collapse=' -> '))
+      unlist(out)
 }
-rlt <- getpath(g,from,to)
+
+rlt <- lapply(c('geno::ELF3','geno::CREBBP','geno::POU3F2'),function(x){
+  getpath(g,x,'disease::AD')
+})
+
+key <- colnames(as_adjacency_matrix(g))
+geno <- grep('geno::',key,value=T)
+d <- grep('disease::',key,value=T)
+
+test <- sapply(geno,function(from){
+  print(geno)
+  sapply(d,function(to){
+    length(getpath(g,from,to))
+  })
+})
