@@ -189,7 +189,7 @@ qpca <- function(A,rank=0,ifscale=TRUE){
     d <- A.svd$d-A.svd$d[min(rank+1,nrow(A),ncol(A))]
   }
   d <- d[d > 1e-8]
-  r <- length(d) 
+  r <- length(d)
   prop <- d^2; info <- sum(prop)/sum(A.svd$d^2);prop <- cumsum(prop/sum(prop))
   d <- diag(d,length(d),length(d))
   u <- A.svd$u[,1:r,drop=F]
@@ -305,3 +305,6 @@ for(i in (length(rlt)+1):length(Y.exp)){
 
 #Validation
 load('expr_network_20161205.rda')
+names(rlt) <- names(Y.exp)
+setwd('C:\\Users\\zhu2\\Documents\\network_final')
+save(rlt,file='rlt_expnetwork.rda')
