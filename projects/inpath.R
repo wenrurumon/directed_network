@@ -315,7 +315,10 @@ test2 <- function(i){
   stability = 0.8
   #
   Y <- Y.exp[[i]]
-  system.time(Y.sem <- sparse_2sem(Y,lambda=lambda,times=1))
+  system.time(Y.sem <- try(sparse_2sem(Y,lambda=lambda,times=1)))
+  if(!is.list(Y.sem)){
+    return(list(data=Y,adj=list(eq_matrix=matrix(1,1,1))))
+  }
   system.time(Y.cnif <- try(CNIF(data=Y,init.adj=(Y.sem[[1]]>=stability),max_parent=3)))
   if(!is.list(Y.cnif)){
     system.time(Y.cnif <- try(CNIF(data=Y,init.adj=(Y.sem[[1]]>=stability),max_parent=2)))
@@ -324,8 +327,7 @@ test2 <- function(i){
   plotnet(Y.rlt[[1]],'directed')
   list(data=Y,adj=Y.rlt)
 }
-rlt_left <- lapply(ileft,function(i){try(test2(i))})
-
+rlt_left <- lapply(ileft,test2)
 rlt[ileft] <- rlt_left
 
 setwd('C:\\Users\\zhu2\\Documents\\network_final')
