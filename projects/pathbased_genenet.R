@@ -22,18 +22,28 @@ library(dplyr)
 library(igraph)
 
 #
-i <- 1
-pathi <- names(rlt)[i]
-x.path <- colnames(pathnet$pathnet)[pathnet$pathnet[grep(pathi,rownames(pathnet$pathnet)),,drop=F]>=.1]
-Y <- as.matrix(rlt[[i]]$data)
-Y.fixed <- rlt[[i]]$adj$eq_matrix
-Xs <- lapply(match(x.path,names(rlt)),function(i){
-  X <- rlt[[i]]$data
-  as.matrix(X)
+
+lapply(1:3,function(i){
+  print(i)
+  print('setup')
+  pathi <- names(rlt)[i]
+  x.path <- colnames(pathnet$pathnet)[pathnet$pathnet[grep(pathi,rownames(pathnet$pathnet)),,drop=F]>=.1]
+  print(x.path)
+  
+  Y <- as.matrix(rlt[[i]]$data)
+  Y.fixed <- rlt[[i]]$adj$eq_matrix
+  Xs <- lapply(match(x.path,names(rlt)),function(i){
+    X <- rlt[[i]]$data
+    as.matrix(X)
+  })
+  
+  j <- 0
+  print('modeling')
+  temps <- lapply(Xs,function(x){
+    print(paste(j<<-j+1,x.path[j]))
+    temp <- sparse_2sem(Y=Y,Y.fixed=Y.fixed,X=x,lambda=0.2)
+    temp$eq_matrix
+  })
+  
 })
 
-temps <- lapply(Xs,function(x){
-  print('newmodel')
-  temp <- sparse_2sem(Y=Y,Y.fixed=Y.fixed,X=x,lambda=0.2)
-  temp$eq_matrix
-})
