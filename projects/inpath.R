@@ -306,5 +306,27 @@ for(i in (length(rlt)+1):length(Y.exp)){
 #Validation
 load('expr_network_20161205.rda')
 names(rlt) <- names(Y.exp)
+
+ileft <- (1:298)[!sapply(rlt,is.list)]
+test2 <- function(i){
+  #Debug
+  print(i)
+  lambda = 0
+  stability = 0.8
+  #
+  Y <- Y.exp[[i]]
+  system.time(Y.sem <- sparse_2sem(Y,lambda=lambda,times=1))
+  system.time(Y.cnif <- try(CNIF(data=Y,init.adj=(Y.sem[[1]]>=stability),max_parent=3)))
+  if(!is.list(Y.cnif)){
+    system.time(Y.cnif <- try(CNIF(data=Y,init.adj=(Y.sem[[1]]>=stability),max_parent=2)))
+  }
+  system.time(Y.rlt <- sparse_2sem(Y,lambda=lambda,Y.fixed=Y.cnif))
+  plotnet(Y.rlt[[1]],'directed')
+  list(data=Y,adj=Y.rlt)
+}
+rlt_left <- lapply(ileft,function(i){try(test2(i))})
+
+rlt[ileft] <- rlt_left
+
 setwd('C:\\Users\\zhu2\\Documents\\network_final')
 save(rlt,file='rlt_expnetwork.rda')
