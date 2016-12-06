@@ -435,4 +435,15 @@ outinfo <- lapply(1:44,function(i){
 })
 
 prop <- unlist(lapply(outinfo,function(x) x$prop))
-group <- unlist(lapply(outinfo,function(x) x$group))
+group <- unlist(lapply(outinfo,function(x) x$groupnm))
+groupid <- match(group,unique(group))
+
+out <- (out>=.8)
+out2 <- mat.sds(adj.group(out*prop,groupid))
+dimnames(out2) <- list(unique(group),unique(group))
+
+pathnet <- list(
+  compnet = out, pathnet = out2, group=group, prop=prop
+)
+
+save(pathnet,file='C:\\Users\\zhu2\\Documents\\network_final\\pathnet.rda')
