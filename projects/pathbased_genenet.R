@@ -21,9 +21,11 @@ library(data.table)
 library(dplyr)
 library(igraph)
 
-#
+# rlt <- rlt[sapply(rlt,is.list)]
 
-lapply(1:3,function(i){
+#Batch
+
+test <- function(i){
   print(i)
   print('setup')
   pathi <- names(rlt)[i]
@@ -41,9 +43,13 @@ lapply(1:3,function(i){
   print('modeling')
   temps <- lapply(Xs,function(x){
     print(paste(j<<-j+1,x.path[j]))
-    temp <- sparse_2sem(Y=Y,Y.fixed=Y.fixed,X=x,lambda=0.2)
-    temp$eq_matrix
+    temp <- try(sparse_2sem(Y=Y,Y.fixed=Y.fixed,X=x,lambda=0.2)$eq_matrix)
+    temp
   })
   
-})
+  return(temps)
+}
 
+rlt <- lapply(1:length(rlt),test)
+
+#Processing Result
