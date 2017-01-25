@@ -138,10 +138,6 @@ mape <- function(adj,x.input){
 }
 ip <- function(x.graph,x.path,x.cost){
   
-  x.graph <- do.call(rbind,adj)
-  x.path <- adj2
-  x.cost <- cost
-  
   parms <- ncol(x.graph)
   x.p <- data.frame(response=x.path[,ncol(x.path)],
                     nparent=rowSums(x.path[,2:ncol(x.path)-1,drop=F]),
@@ -192,16 +188,22 @@ ip <- function(x.graph,x.path,x.cost){
 # Model
 #################################################
 
-i <- 2
+model <- function(i){
+  grpi <- unique(pathlist[,1])[i]
+  paths <- pathlist[pathlist[,1]==grpi,2]
+  input <- pcainpath[names(pcas)%in%paths]
+  print(list(i=i,groupname=grpi,paths=names(input)))
+  x.input <- lapply(input,function(x){
+    x$score[,1:which(x$prop>=0.8)[1],drop=F]
+  })
+  
+  adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=0.6)})
+  adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = 3),i)}))
+  cost <- mape(adj2,x.input)
+  dag <-   ip(do.call(rbind,adj),adj2,cost)
+  dimnames(dag) <- list(names(x.input),names(x.input))
+  plotnet(dag)
+  dag
+}
 
-grpi <- unique(pathlist[,1])[i]
-paths <- pathlist[pathlist[,1]==grpi,2]
-input <- pcainpath[names(pcas)%in%paths]
-print(list(i=i,groupname=grpi,paths=names(input)))
-x.input <- lapply(input,function(x){
-  x$score[,1:which(x$prop>=0.8)[1],drop=F]
-})
 
-adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=0.6)})
-adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = 3),i)}))
-cost <- mape(adj2,x.input)
