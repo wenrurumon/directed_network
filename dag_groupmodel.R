@@ -188,22 +188,46 @@ ip <- function(x.graph,x.path,x.cost){
 # Model
 #################################################
 
-model <- function(i){
-  grpi <- unique(pathlist[,1])[i]
+inputs <- lapply(unique(pathlist[,1]),function(grpi){
   paths <- pathlist[pathlist[,1]==grpi,2]
   input <- pcainpath[names(pcas)%in%paths]
   print(list(i=i,groupname=grpi,paths=names(input)))
+  input
+})
+inputs <- inputs[sapply(inputs,length)>0]
+
+model <- function(input,lambda=0.6 ,max.parent=3){
+  
+  if(length(input)==1){
+    dag <- matrix(0,1,1)
+    dimnames(dag) <- list(names(input),names(input))
+  }
+  
   x.input <- lapply(input,function(x){
     x$score[,1:which(x$prop>=0.8)[1],drop=F]
   })
   
-  adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=0.6)})
-  adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = 3),i)}))
+  adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=lambda)})
+  adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = max.parent),i)}))
   cost <- mape(adj2,x.input)
   dag <-   ip(do.call(rbind,adj),adj2,cost)
   dimnames(dag) <- list(names(x.input),names(x.input))
   plotnet(dag)
   dag
 }
+
+i <- 0
+par(mfrow=c(3,3))
+test <- lapply(inputs,function(x){
+  print(i<<-i+1)
+  gc()
+  rlt <- try(model(x))
+  if(!is.matrix(rlt)){
+    rlt <- model(x,max.parent = 2)
+  }
+  return(rlt)
+})
+
+
 
 
