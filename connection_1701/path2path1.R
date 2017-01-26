@@ -213,7 +213,6 @@ model <- function(input,lambda=0.6 ,max.parent=3){
   cost <- mape(adj2,x.input)
   dag <-   ip(do.call(rbind,adj),adj2,cost)
   dimnames(dag) <- list(names(x.input),names(x.input))
-  plotnet(dag)
   dag
 }
 
