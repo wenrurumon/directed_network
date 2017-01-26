@@ -4,19 +4,20 @@ gc()
 
 # load('network_per_group.rda')
 setwd('C:\\Users\\zhu2\\Documents\\signaling\\codes\\')
-source('sparse_2sem_final.R')
+# source('sparse_2sem_final.R')
 source('local_cnif_macro.R')
-source('CNIF.R')
+# source('CNIF.R')
 sourceCpp("score_function_regression.cpp")
 sourceCpp("simple_cycle.cpp")
 sourceCpp("initial_sem.cpp")
-setwd('C:\\Users\\zhu2\\Documents\\getpathway')
-load("~/getpathway/gene39761.rda.RData")
-load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
 library(grplasso)
 library(data.table)
 library(dplyr)
 library(igraph)
+
+#################################################
+# macros 1
+#################################################
 
 qpca <- function(A,rank=0,ifscale=TRUE){
   if(ifscale){A <- scale(as.matrix(A))[,]}
@@ -49,16 +50,6 @@ pca <- function(X){
   mat <- Xeigen$v
   list(score=score,prop=value,mat=mat)
 }
-
-qexpinpath <- lapply(expinpath,function(x){
-  if(ncol(x)==1){
-    return(x)
-  }else{
-    x <- qpca(x,which(pca(x)$prop>=0.9)[1])
-    x$X[,1:which(x$prop>=0.9)[1],drop=F]
-  }  
-}
-)
 plotnet <- function(x,mode='directed'){
   diag(x) <- 0
   plot(graph_from_adjacency_matrix(t(x),mode=mode),
@@ -67,14 +58,9 @@ plotnet <- function(x,mode='directed'){
        vertex.label.cex=1,
        edge.width=.1)
 }
-pcainpath <- lapply(qexpinpath,function(x){pca(x)})
-for(i in 1:length(pcainpath)){
-  colnames(pcainpath[[i]]$score) <- paste(ptwmap[match(names(pcainpath),ptwmap[,2]),1][i],1:ncol(pcainpath[[i]]$score),sep="_")
-}
-pcas <- lapply(pcainpath,function(x){x[[1]]})[-3]
 
 #################################################
-# sub Macros
+# macros 2
 #################################################
 
 equationj <- function(j,x.input,lambda=0.5){
@@ -184,18 +170,6 @@ ip <- function(x.graph,x.path,x.cost){
   return(dag)
 }
 
-#################################################
-# Model
-#################################################
-
-inputs <- lapply(unique(pathlist[,1]),function(grpi){
-  paths <- pathlist[pathlist[,1]==grpi,2]
-  input <- pcainpath[names(pcas)%in%paths]
-  print(list(i=i,groupname=grpi,paths=names(input)))
-  input
-})
-inputs <- inputs[sapply(inputs,length)>0]
-
 model <- function(input,lambda=0.6 ,max.parent=3){
   
   if(length(input)==1){
@@ -216,9 +190,41 @@ model <- function(input,lambda=0.6 ,max.parent=3){
   dag
 }
 
+#################################################
+# run project
+#################################################
+
+setwd('C:\\Users\\zhu2\\Documents\\getpathway')
+load("~/getpathway/gene39761.rda.RData")
+load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
+
+#Process data
+qexpinpath <- lapply(expinpath,function(x){
+  if(ncol(x)==1){
+    return(x)
+  }else{
+    x <- qpca(x,which(pca(x)$prop>=0.9)[1])
+    x$X[,1:which(x$prop>=0.9)[1],drop=F]
+  }  
+}
+)
+pcainpath <- lapply(qexpinpath,function(x){pca(x)})
+for(i in 1:length(pcainpath)){
+  colnames(pcainpath[[i]]$score) <- paste(ptwmap[match(names(pcainpath),ptwmap[,2]),1][i],1:ncol(pcainpath[[i]]$score),sep="_")
+}
+pcas <- lapply(pcainpath,function(x){x[[1]]})[-3]
+inputs <- lapply(unique(pathlist[,1]),function(grpi){
+  paths <- pathlist[pathlist[,1]==grpi,2]
+  input <- pcainpath[names(pcas)%in%paths]
+  print(list(i=i,groupname=grpi,paths=names(input)))
+  input
+})
+inputs <- inputs[sapply(inputs,length)>0]
+
+#Modeling
 i <- 0
 par(mfrow=c(3,3))
-test <- lapply(inputs,function(x){
+rlt_p2pinp <- lapply(inputs,function(x){
   print(i<<-i+1)
   gc()
   rlt <- try(model(x))
@@ -229,10 +235,9 @@ test <- lapply(inputs,function(x){
 })
 
 #which(!sapply(test,is.matrix))
-test[[18]] <- model(inputs[[18]],0.7,3)
-test[[25]] <- model(inputs[[25]],0.7,3)
-
-
+rlt_p2pinp[[18]] <- model(inputs[[18]],0.7,3)
+rlt_p2pinp[[25]] <- model(inputs[[25]],0.7,3)
+save(rlt_p2pinp,file='final/rlt_p2pinp.rda')
 
 
 
