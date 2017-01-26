@@ -237,7 +237,7 @@ rlt_p2pinp <- lapply(inputs,function(x){
 #which(!sapply(test,is.matrix))
 rlt_p2pinp[[18]] <- model(inputs[[18]],0.7,3)
 rlt_p2pinp[[25]] <- model(inputs[[25]],0.7,3)
-save(rlt_p2pinp,file='final/rlt_p2pinp.rda')
+save(rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
 
 
 
