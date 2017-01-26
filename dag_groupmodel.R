@@ -201,6 +201,7 @@ model <- function(input,lambda=0.6 ,max.parent=3){
   if(length(input)==1){
     dag <- matrix(0,1,1)
     dimnames(dag) <- list(names(input),names(input))
+    return(dag)
   }
   
   x.input <- lapply(input,function(x){
