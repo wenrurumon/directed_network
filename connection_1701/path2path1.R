@@ -4,9 +4,9 @@ gc()
 
 # load('network_per_group.rda')
 setwd('C:\\Users\\zhu2\\Documents\\signaling\\codes\\')
-# source('sparse_2sem_final.R')
+source('sparse_2sem_final.R')
 source('local_cnif_macro.R')
-# source('CNIF.R')
+source('CNIF.R')
 sourceCpp("score_function_regression.cpp")
 sourceCpp("simple_cycle.cpp")
 sourceCpp("initial_sem.cpp")
@@ -53,9 +53,9 @@ pca <- function(X){
 plotnet <- function(x,mode='directed'){
   diag(x) <- 0
   plot(graph_from_adjacency_matrix(t(x),mode=mode),
-       edge.arrow.size=.1,
-       vertex.size=3,
-       vertex.label.cex=1,
+       edge.arrow.size=.3,
+       vertex.size=.1,
+       vertex.label.cex=1.2,
        edge.width=.1)
 }
 
@@ -122,8 +122,34 @@ mape <- function(adj,x.input){
     }
   })
 }
-ip <- function(x.graph,x.path,x.cost){
-  
+get_all_circles <- function(mat,score){
+  g <- graph_from_adjacency_matrix(mat)
+  do.call(c,lapply(1:ncol(mat),function(nodei){
+    # print(nodei/ncol(mat))
+    lapply(all_simple_paths(g,nodei,unique(score[score[,nodei]==1,ncol(mat)+1])),function(x){c(x,x[1])})
+  }))
+}
+pastes <- function(x){
+  xi <- x[[1]]
+  for(i in 2:length(x)-1){
+    xi <- as.vector(outer(xi,x[[i+1]],paste))
+  }
+  lapply(strsplit(xi,' '),function(x){sort(as.numeric(x))})
+}
+make.constraints_byigraph <- function(mat,score){
+  circles <- get_all_circles(mat,score)
+  paths <- lapply(circles,function(circlei){
+    lapply(lapply(2:length(circlei)-1,function(i){circlei[i,i+1]}),function(pathi){
+      which(score[,ncol(mat)+1]==pathi[1] & score[,pathi[2]]==1)
+    })
+  })
+  do.call(rbind,lapply(unique(do.call(c,lapply(paths,pastes))),function(x){
+    tmp <- rep(0,nrow(score))
+    tmp[x] <- 1
+    tmp
+  }))
+}
+ip_zy <- function(x.graph,x.path,x.cost){
   parms <- ncol(x.graph)
   x.p <- data.frame(response=x.path[,ncol(x.path)],
                     nparent=rowSums(x.path[,2:ncol(x.path)-1,drop=F]),
@@ -169,13 +195,63 @@ ip <- function(x.graph,x.path,x.cost){
   dag <- x.path[result$solution==1,1:parms,drop=F]
   return(dag)
 }
+ip_hzx <- function(x.graph,x.path,x.cost){
+  parms <- ncol(x.graph)
+  x.p <- data.frame(response=x.path[,ncol(x.path)],
+                    nparent=rowSums(x.path[,2:ncol(x.path)-1,drop=F]),
+                    cost=x.cost)
+  x.p <- as.matrix(x.p %>% group_by(response,nparent) %>% summarise(min=min(cost)))
+  
+  keep.path <- rep(T,nrow(x.path))
+  for(i in 1:nrow(x.p)){
+    if(x.p[i,2]>1){
+      x.sel <- (rowSums(x.path[,2:ncol(x.path)-1,drop=F])==x.p[i,2])&(x.path[,ncol(x.path)]==x.p[i,1])
+      keep.path[x.sel] <- x.cost[x.sel]<x.p[i-1,3]
+    }
+  }
+  
+  x.path <- x.path[keep.path,]
+  obj <- x.cost[keep.path]
+  types <- rep('I',parms)
+  
+  rhs   = hash()
+  sense   = hash()
+  A     = hash()
+  
+  working.node = x.path[,parms+1]
+  working.parent = x.path[,1:parms]
+  for( i in 1:parms ){
+    cons.name = paste("one parent set",i)
+    rhs[[cons.name]] = 1
+    sense[[cons.name]] = "=="
+    A[[cons.name]]   = (working.node == i)
+  }
+  
+  cons.names = keys(A)
+  A = t(values(A,cons.names))
+  sense = values(sense,cons.names)
+  rhs = values(rhs,cons.names)
+  csc.A = make.constraints_byigraph(x.graph,cbind(x.path,obj))
+  
+  if(!is.null(csc.A)){
+    A = rbind(A, csc.A)
+    sense = c(sense, rep("<=",nrow(csc.A)))
+    rhs = c(rhs, rowSums(csc.A)-1)
+    result = Rsymphony_solve_LP(obj=obj,mat=A,dir=sense,rhs=rhs,types=types,verbosity = 0 )
+    dag <- x.path[result$solution==1,1:parms,drop=F]
+    return(dag)
+  } else {
+    return(x.graph)
+  }
+  
+}
 
 model <- function(input,lambda=0.6 ,max.parent=3){
-  
+  gc()
   if(length(input)==1){
     dag <- matrix(0,1,1)
     dimnames(dag) <- list(names(input),names(input))
-    return(dag)
+    return(list(dag=dag))
   }
   
   x.input <- lapply(input,function(x){
@@ -187,8 +263,39 @@ model <- function(input,lambda=0.6 ,max.parent=3){
   cost <- mape(adj2,x.input)
   dag <-   ip(do.call(rbind,adj),adj2,cost)
   dimnames(dag) <- list(names(x.input),names(x.input))
-  dag
+  plotnet(dag)
+  list(dag=dag,coef=c(lambda,max.parent))
 }
+
+model2 <- function(input,lambda,max.parent){
+
+  gc()
+  if(length(input)==1){
+    dag <- matrix(0,1,1)
+    dimnames(dag) <- list(names(input),names(input))
+    return(list(dag=dag))
+  }
+  
+  x.input <- lapply(input,function(x){
+    x$score[,1:which(x$prop>=0.8)[1],drop=F]
+  })
+  
+  adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=lambda)})
+  adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = max.parent),i)}))
+  cost <- mape(adj2,x.input)
+  dag <-   ip_zy(do.call(rbind,adj),adj2,cost)
+  
+  adj <- lapply(1:nrow(dag),function(i){dag[i,]})
+  adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = max.parent),i)}))
+  cost <- mape(adj2,x.input)
+  dag <-   ip_hzx(do.call(rbind,adj),adj2,cost)
+  
+  dimnames(dag) <- list(names(x.input),names(x.input))
+  plotnet(dag)
+  
+  return(dag)  
+}
+
 
 #################################################
 # run project
@@ -212,32 +319,50 @@ pcainpath <- lapply(qexpinpath,function(x){pca(x)})
 for(i in 1:length(pcainpath)){
   colnames(pcainpath[[i]]$score) <- paste(ptwmap[match(names(pcainpath),ptwmap[,2]),1][i],1:ncol(pcainpath[[i]]$score),sep="_")
 }
-pcas <- lapply(pcainpath,function(x){x[[1]]})[-3]
+pcas <- lapply(pcainpath,function(x){x})[-3]
 inputs <- lapply(unique(pathlist[,1]),function(grpi){
   paths <- pathlist[pathlist[,1]==grpi,2]
-  input <- pcainpath[names(pcas)%in%paths]
+  input <- pcas[names(pcas)%in%paths]
   print(list(i=i,groupname=grpi,paths=names(input)))
   input
 })
+names(inputs) <- unique(pathlist[,1])
 inputs <- inputs[sapply(inputs,length)>0]
 
-#Modeling
+# Modeling
 i <- 0
-par(mfrow=c(3,3))
 rlt_p2pinp <- lapply(inputs,function(x){
   print(i<<-i+1)
-  gc()
-  rlt <- try(model(x))
-  if(!is.matrix(rlt)){
-    rlt <- try(model(x,max.parent = 2))
-  }
+  par(mfrow=c(2,2))
+  rlt1 <- try(model2(x,0.6,max.parent = 3))
+  rlt2 <- try(model2(x,0.7,max.parent = 3))
+  rlt3 <- try(model2(x,0.6,max.parent = 2))
+  rlt4 <- try(model2(x,0.7,max.parent = 2))
+  rlt <- list(rlt1,rlt3,rlt2,rlt4)
   return(rlt)
 })
 
-#which(!sapply(test,is.matrix))
-rlt_p2pinp[[18]] <- model(inputs[[18]],0.7,3)
-rlt_p2pinp[[25]] <- model(inputs[[25]],0.7,3)
-save(rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
+which(!sapply(rlt_p2pinp,is.list))
+# rlt_p2pinp[[18]] <- model(inputs[[18]],0.7,3)
+# rlt_p2pinp[[25]] <- model(inputs[[25]],0.7,3)
+save(inputs,rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
+# 
+
+##########################
+
+i <- 0
+# 
+print(i <- i+1)
+lapply(inputs,names)[i]
+par(mfrow=c(2,2))
+for(j in 1:4){try(plotnet(rlt_p2pinp[[i]][[j]]))}
+# save(inputs,rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
+
+
+
+
+
+
 
 
 
