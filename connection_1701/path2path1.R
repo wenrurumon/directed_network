@@ -255,7 +255,8 @@ model <- function(input,lambda=0.6 ,max.parent=3){
   }
   
   x.input <- lapply(input,function(x){
-    x$score[,1:which(x$prop>=0.8)[1],drop=F]
+    # x$score[,1:which(x$prop>=0.8)[1],drop=F]
+    x$score
   })
   
   adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=lambda)})
@@ -273,11 +274,12 @@ model2 <- function(input,lambda,max.parent){
   if(length(input)==1){
     dag <- matrix(0,1,1)
     dimnames(dag) <- list(names(input),names(input))
-    return(list(dag=dag))
+    return(dag)
   }
   
   x.input <- lapply(input,function(x){
-    x$score[,1:which(x$prop>=0.8)[1],drop=F]
+    # x$score[,1:which(x$prop>=0.8)[1],drop=F]
+    x$score
   })
   
   adj <- lapply(1:length(x.input),function(j){equationj(j,x.input,lambda=lambda)})
@@ -331,32 +333,33 @@ inputs <- inputs[sapply(inputs,length)>0]
 
 # Modeling
 i <- 0
+par(mfrow=c(3,3))
 rlt_p2pinp <- lapply(inputs,function(x){
   print(i<<-i+1)
-  par(mfrow=c(2,2))
   rlt1 <- try(model2(x,0.6,max.parent = 3))
-  rlt2 <- try(model2(x,0.7,max.parent = 3))
+    if(is.matrix(rlt1)){return(rlt1)}
   rlt3 <- try(model2(x,0.6,max.parent = 2))
+    if(is.matrix(rlt3)){return(rlt3)}
+  rlt2 <- try(model2(x,0.7,max.parent = 3))
+    if(is.matrix(rlt2)){return(rlt2)}
   rlt4 <- try(model2(x,0.7,max.parent = 2))
-  rlt <- list(rlt1,rlt3,rlt2,rlt4)
-  return(rlt)
+    if(is.matrix(rlt4)){return(rlt4)}
+  return(NULL)
 })
 
-which(!sapply(rlt_p2pinp,is.list))
+# which(!sapply(rlt_p2pinp,is.list))
 # rlt_p2pinp[[18]] <- model(inputs[[18]],0.7,3)
 # rlt_p2pinp[[25]] <- model(inputs[[25]],0.7,3)
-save(inputs,rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
+rlt_p2pinp <- list(inputs,rlt_p2pinp)
+save(rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
 # 
 
 ##########################
 
-i <- 0
-# 
-print(i <- i+1)
-lapply(inputs,names)[i]
 par(mfrow=c(2,2))
-for(j in 1:4){try(plotnet(rlt_p2pinp[[i]][[j]]))}
-# save(inputs,rlt_p2pinp,file='model20170126/rlt_p2pinp.rda')
+for(i in 1:length(rlt_p2pinp[[2]])){
+  plotnet(rlt_p2pinp[[2]][[i]])
+}
 
 
 
