@@ -1,3 +1,7 @@
+
+
+setwd('C:\\Users\\zhu2\\Documents\\getpathway\\coexpression\\SimulatedData')
+
 #=====================================================================================
 #
 #  Code chunk 1
