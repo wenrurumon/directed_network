@@ -1,5 +1,5 @@
 
-getwd('C:\\Users\\zhu2\\Documents\\getpathway\\coexpression\\SimulatedData');
+setwd('C:\\Users\\zhu2\\Documents\\getpathway\\coexpression\\SimulatedData');
 rm(list=ls())
    
 #=====================================================================================
