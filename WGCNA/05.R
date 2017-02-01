@@ -1,3 +1,7 @@
+
+getwd('C:\\Users\\zhu2\\Documents\\getpathway\\coexpression\\SimulatedData');
+rm(list=ls())
+   
 #=====================================================================================
 #
 #  Code chunk 1
@@ -6,7 +10,6 @@
 
 
 # Display the current working directory
-getwd();
 # If necessary, change the path below to the directory where the data files are stored. 
 # "." means current directory.  On Windows use a forward slash / instead of the usual \.
 workingDir = ".";
