@@ -39,7 +39,7 @@ load("~/getpathway/gene39761.rda.RData")
 load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
 
 setwd("C:/Users/zhu2/Documents/getpathway/model20170215/")
-load('pathwaymap.rda')
+# load('pathwaymap.rda')
 
 pathlist <- pathlist[names(expinpath)%in%pathlist[,2],]
 pathwaymap <- lapply(pathwaymap,function(x){
@@ -61,6 +61,26 @@ grpnet <- matrix(0,length(ref.grpnet),length(ref.grpnet),dimnames=list(refnames,
 for(i in 1:length(ref.grpnet)){
   grpnet[i,refnames %in% ref.grpnet[[i]]] <- 1
 }
+# 
+# setwd('C:\\Users\\zhu2\\Documents\\getpathway')
+# load("~/getpathway/gene39761.rda.RData")
+# load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
+# 
+# expinpath <- expinpath[-3]
+# inputs <- lapply(unique(pathlist[,1]),function(grpi){
+#   paths <- pathlist[pathlist[,1]==grpi,2]
+#   input <- expinpath[names(expinpath)%in%paths]
+#   print(list(groupname=grpi,paths=names(input)))
+#   input
+# })
+# names(inputs) <- unique(pathlist[,1])
+# inputs <- inputs[sapply(inputs,length)>0]
+
+names1 <- unlist(lapply(inputs,names))
+pthnet <- matrix(0,length(names1),length(names1),dimnames=list(names1,names1))
+for(i in 1:length(pathwaymap)){
+  pthnet[i,names1%in%pathwaymap[[i]]] <- 1
+}
 
 ###########################
 # Summary
@@ -76,4 +96,5 @@ plotnet <- function(x,mode='directed'){
 }
 
 plotnet(grpnet)
-save(pathwaymap,ref.grpnet,grpnet,file="pathwaymap.rda")
+save(pathwaymap,ref.grpnet,pthnet,grpnet,file="pathwaymap.rda")
+
