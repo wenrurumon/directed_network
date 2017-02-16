@@ -379,8 +379,8 @@ align_network <- function(net1,net2){
   }
   g1 <- graph_from_adjacency_matrix(t(net1)); g2 <- graph_from_adjacency_matrix(t(net2))
   g1.match <- apply(graph_to_data_frame(g1),1,function(x){
-    nfrom=grep(x[1],names(V(g1)))
-    nto=grep(x[2],names(V(g1)))
+    nfrom=grep(x[1],names(V(g2)))
+    nto=grep(x[2],names(V(g2)))
     length(all_shortest_paths(g2,nfrom,nto)$res)
   })
   c(aligned=sum(g1.match>0),net1=sum(net1),net2=sum(net2))
