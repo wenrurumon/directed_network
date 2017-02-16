@@ -337,12 +337,13 @@ load('pathwaymap.rda')
 gc()
 
 x.input <- pcas
-lambda <- 0.3; max.parent = 10
+# lambda <- .48; max.parent = 8
+lambda <- .5; max.parent = 10
 adj <- lapply(1:length(x.input),function(j){print(j);equationj(j,x.input,lambda=lambda)})
 adj4plot <- do.call(rbind,adj)>0; dimnames(adj4plot) <- list(names(x.input),names(x.input))
 adj2 <- do.call(rbind,lapply(1:length(adj),function(i){cbind(subpath(adj[[i]],max.parent = max.parent),i)}))
 cost <- mape(adj2,x.input)
-dag <-   ip_zy(do.call(rbind,adj),adj2,cost)
+gc();dag <-   ip_zy(do.call(rbind,adj),adj2,cost)
 dimnames(dag) <- list(names(x.input),names(x.input))
 plotnet(dag)
 dag_zy <- dag
@@ -354,6 +355,7 @@ cost <- mape(adj2,x.input)
 dag <-   ip_hzx(do.call(rbind,adj),adj2,cost)
 dimnames(dag) <- list(names(x.input),names(x.input))
 plotnet(dag)
+sum(dag)
 
 ##############################
 # Network Alignment
@@ -386,3 +388,6 @@ align_network <- function(net1,net2){
 
 align_network(dag,grpnet)
 align_network(grpnet,dag)
+
+rlt_p2pcp <- list(x.input,dag)
+save(rlt_p2pcp,file='rlt_p2pcp.rda')
