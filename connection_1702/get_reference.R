@@ -56,3 +56,24 @@ ref.grpnet <- lapply(unique(names(ref.grpnet)),function(x){
   unique(unlist(ref.grpnet[names(ref.grpnet)==x]))
 })[!is.na(unique(names(ref.grpnet)))]
 names(ref.grpnet) <- refnames
+
+grpnet <- matrix(0,length(ref.grpnet),length(ref.grpnet),dimnames=list(refnames,refnames))
+for(i in 1:length(ref.grpnet)){
+  grpnet[i,refnames %in% ref.grpnet[[i]]] <- 1
+}
+
+###########################
+# Summary
+###########################
+
+plotnet <- function(x,mode='directed'){
+  diag(x) <- 0
+  plot(graph_from_adjacency_matrix(t(x),mode=mode),
+       edge.arrow.size=.3,
+       vertex.size=3,
+       vertex.label.cex=1,
+       edge.width=.1)
+}
+
+plotnet(grpnet)
+save(pathwaymap,ref.grpnet,grpnet,file="pathwaymap.rda")
