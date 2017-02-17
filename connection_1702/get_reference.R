@@ -1,7 +1,7 @@
 rm(list=ls())
 
 ##########################
-# Pathway Group
+# KEGG mining
 ##########################
 
 setwd("C:/Users/zhu2/Documents/getpathway/model20170215/")
@@ -19,82 +19,66 @@ pathwaymap <- lapply(url2,function(url){
   print(url)
   html <- readLines(url)
   html <- html[which(grepl('show_pathway',html)&grepl('rect',html)&grepl('hsa|map',html))]
-  sapply(strsplit(html,": "),function(x){
+  unlist(lapply(strsplit(html,": "),function(x){
     out <- try(sapply(strsplit(x[[2]],'\"'),function(x){x[[1]]}))
-    ifelse(length(x)==1,x,out)
-  })
+    if(length(x)>1){return(tolower(out))}
+  }))
 })
-names(pathwaymap) <- substr(html2,regexpr('">',html2)+2,regexpr('</a>',html2)-1)
-
-save(pathwaymap,file="pathwaymap.rda")
+names(pathwaymap) <- tolower(substr(html2,regexpr('">',html2)+2,regexpr('</a>',html2)-1))
 
 ##########################
-# Pathway Group
+# Pathway Network
 ##########################
-
-rm(list=ls())
 
 setwd('C:\\Users\\zhu2\\Documents\\getpathway')
 load("~/getpathway/gene39761.rda.RData")
-load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
 
-setwd("C:/Users/zhu2/Documents/getpathway/model20170215/")
-# load('pathwaymap.rda')
+enames <- tolower(names(expinpath))[names(expinpath)%in%pathlist[,2]]
+expinpath <- expinpath[names(expinpath)%in%pathlist[,2]]
 
-pathlist <- pathlist[names(expinpath)%in%pathlist[,2],]
-pathwaymap <- lapply(pathwaymap,function(x){
-  x[x%in%names(expinpath)]
-})[names(pathwaymap)%in%names(expinpath)]
-
-ref.grpnet <- lapply(pathwaymap,function(x){
-  unique(pathlist[pathlist[,2]%in%x,1])
+pathwaymap2 <- lapply(unique(c(names(pathwaymap),unlist(pathwaymap))),function(x){
+  as.character(unlist(pathwaymap[names(pathwaymap)==x]))
 })
-names(ref.grpnet) <- pathlist[match(names(pathwaymap),pathlist[,2]),1]
-refnames <- unique(names(ref.grpnet))[!is.na(unique(names(ref.grpnet)))]
+names(pathwaymap2) <- unique(c(names(pathwaymap),unlist(pathwaymap)))
 
-ref.grpnet <- lapply(unique(names(ref.grpnet)),function(x){
-  unique(unlist(ref.grpnet[names(ref.grpnet)==x]))
-})[!is.na(unique(names(ref.grpnet)))]
-names(ref.grpnet) <- refnames
+test <- sapply(pathwaymap2,function(x){
+  unique(c(names(pathwaymap2),unlist(pathwaymap2)))%in%x
+})
+rownames(test) <- unique(c(names(pathwaymap2),unlist(pathwaymap2)))
+tnames <- rownames(test)
 
-grpnet <- matrix(0,length(ref.grpnet),length(ref.grpnet),dimnames=list(refnames,refnames))
-for(i in 1:length(ref.grpnet)){
-  grpnet[i,refnames %in% ref.grpnet[[i]]] <- 1
-}
-# 
-# setwd('C:\\Users\\zhu2\\Documents\\getpathway')
-# load("~/getpathway/gene39761.rda.RData")
-# load("C:/Users/zhu2/Documents/getpathway/ptwmap2.rda")
-# 
-# expinpath <- expinpath[-3]
-# inputs <- lapply(unique(pathlist[,1]),function(grpi){
-#   paths <- pathlist[pathlist[,1]==grpi,2]
-#   input <- expinpath[names(expinpath)%in%paths]
-#   print(list(groupname=grpi,paths=names(input)))
-#   input
-# })
-# names(inputs) <- unique(pathlist[,1])
-# inputs <- inputs[sapply(inputs,length)>0]
+enames[!enames%in%tnames]
+enames[enames=="glycosylphosphatidylinositol(gpi)-anchor biosynthesis"] <- "glycosylphosphatidylinositol (gpi)-anchor biosynthesis"
+enames[enames=="glycosphingolipid biosynthesis - globo series"] <- "glycosphingolipid biosynthesis - globo and isoglobo series"
 
-names1 <- unlist(lapply(inputs,names))
-pthnet <- matrix(0,length(names1),length(names1),dimnames=list(names1,names1))
-for(i in 1:length(pathwaymap)){
-  pthnet[i,names1%in%pathwaymap[[i]]] <- 1
-}
+test <- test[match(enames,rownames(test)),match(enames,colnames(test))]
+dimnames(test) <- list(names(expinpath),names(expinpath))
+pthnet <- test[!apply(test,1,function(x){all(is.na(x))}),!apply(test,1,function(x){all(is.na(x))})]
 
-###########################
-# Summary
-###########################
+##########################
+# pathway group network
+##########################
 
-plotnet <- function(x,mode='directed'){
-  diag(x) <- 0
-  plot(graph_from_adjacency_matrix(t(x),mode=mode),
-       edge.arrow.size=.3,
-       vertex.size=3,
-       vertex.label.cex=1,
-       edge.width=.1)
-}
+pathwaymap <- lapply(pathwaymap2,function(x){unique(x[x%in%enames])})
+pathwaymap <- pathwaymap[names(pathwaymap)%in%enames]
+pathwaymap <- lapply(pathwaymap,function(x){
+  names(expinpath)[match(x,enames)]
+})
+names(pathwaymap) <- names(expinpath)[match(names(pathwaymap),enames)]
 
-plotnet(grpnet)
-save(pathwaymap,ref.grpnet,pthnet,grpnet,file="pathwaymap.rda")
+pathlist2 <- pathlist[pathlist[,2]%in%names(expinpath),]
 
+grpmap <- lapply(pathwaymap,function(x){unique(pathlist2[pathlist2[,2]%in%x,1])})
+grpname <- pathlist2[match(names(grpmap),pathlist2[,2]),1]
+grpmap <- lapply(unique(grpname),function(x){
+  unique(unlist(grpmap[grpname==x]))
+})
+names(grpmap) <- unique(grpname)
+
+test <- do.call(cbind,lapply(grpmap,function(x){
+  unique(grpname) %in% x
+}))
+dimnames(test) <- list(unique(grpname),unique(grpname))
+grpnet <- test
+
+save(pathwaymap,pthnet,grpmap,grpnet,file='pathwaymap.rda')
