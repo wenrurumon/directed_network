@@ -81,4 +81,4 @@ test <- do.call(cbind,lapply(grpmap,function(x){
 dimnames(test) <- list(unique(grpname),unique(grpname))
 grpnet <- test
 
-save(pathwaymap,pthnet,grpmap,grpnet,file='pathwaymap.rda')
+save(pathwaymap,pthnet,grpmap,grpnet,file='C:/Users/zhu2/Documents/getpathway/model20170215/pathwaymap.rda')
