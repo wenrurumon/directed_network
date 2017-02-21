@@ -321,16 +321,20 @@ align_network <- function(net1,net2,cut2net1=F){
   if(cut2net1){
     net2 <- net2[rownames(net2)%in%rownames(net1),colnames(net2)%in%colnames(net1)]
   }
-  if(is.character(all.equal(dimnames(net1),dimnames(net2)))){
-    print('###Warning, dimnames not equal###')
-  }
+  # if(is.character(all.equal(dimnames(net1),dimnames(net2)))){
+    # print('###Warning, dimnames not equal###')
+  # }
   g1 <- graph_from_adjacency_matrix(t(net1)); g2 <- graph_from_adjacency_matrix(t(net2))
-  g1.match <- apply(graph_to_data_frame(g1),1,function(x){
-    nfrom=V(g2)[names(V(g2))==x[1]]
-    nto=V(g2)[names(V(g2))==x[2]]
-    length(all_shortest_paths(g2,nfrom,nto)$res)
-    # all_shortest_paths(g2,nfrom,nto)
-  })
+  if(sum(net1)==0){
+    g1.match=0
+  } else {
+    g1.match <- apply(graph_to_data_frame(g1),1,function(x){
+      nfrom=V(g2)[names(V(g2))==x[1]]
+      nto=V(g2)[names(V(g2))==x[2]]
+      length(all_shortest_paths(g2,nfrom,nto)$res)
+      # all_shortest_paths(g2,nfrom,nto)
+    })  
+  }
   # net2 <- net2[rownames(net2)%in%rownames(net1),colnames(net2)%in%colnames(net1)]
   c(aligned=sum(g1.match>0),net1=sum(net1),net2=sum(net2),pd=sum(g1.match>0)/sum(net1),tp=sum(g1.match>0)/sum(net2))
 }
@@ -437,10 +441,28 @@ load('temp.rda')
 #   temp
 # })
 
+# test2 <- lapply(1:length(rlt_p2pinp[[1]]),function(i){
+#   print(i)
+#   gc()
+#   temp <- lapply((8:10)/10,function(lambda){
+#     print(lambda)
+#     model_connectout(i,lambda)
+#   })
+#   # temp <- model_connectout(i,lambda=0.6)
+#   temp
+# })
+# test3 <- lapply(1:44,function(i){
+#   c(test[[i]],test2[[i]])
+# })
+
 #############################
 
-test_vali <- lapply(test,function(x){
+# i <- 0
+test_vali <- lapply(test3,function(x){
+  # print(i <<- i+1)
+  # j <<- 0
   t(sapply(x,function(xi){
+    # print(j <<- j+1)
     round(align_network(xi,pthnet),4)
   }))
 })
@@ -450,8 +472,8 @@ print(i <<- i+1); test_vali[[i]]; sum(test[[i]][[1]][,1:nrow(test[[i]][[1]])]);p
 
 #############################
 
-ind <- c(9,1,1,4,6,1,8,7,2,3,9,9,9,9,5,9,9,9,7,9,9,4,4,1,9,1,9,9,8,3,5,9,9,9,3,9,9,9,9,9,9,9,9,9)
-test <- lapply(1:44,function(i){test[[i]][[ind[i]]]})
+ind <- c(12,1,1,4,6,1,8,7,2,3,12,12,12,12,11,12,12,10,7,11,12,5,4,12,12,10,12,12,9,10,11,12,12,12,11,12,11,12,12,12,12,12,12,12)
+test <- lapply(1:44,function(i){test3[[i]][[ind[i]]]})
 test2 <- matrix(0,length(unlist(lapply(rlt_p2pinp[[1]],names))),length(unlist(lapply(rlt_p2pinp[[1]],names))),
                 dimnames=list(unlist(lapply(rlt_p2pinp[[1]],names)),unlist(lapply(rlt_p2pinp[[1]],names))))
 for(i in 1:length(test)){
@@ -459,3 +481,9 @@ for(i in 1:length(test)){
 }
 rlt_p2pfinal <- list(test,test2)
 save(rlt_p2pfinal,file='rlt_p2pfinal.rda')
+
+##############################
+# Validation
+##############################
+
+align_network(test2,pthnet)
