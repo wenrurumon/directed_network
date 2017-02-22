@@ -231,13 +231,23 @@ vali(align_network2(net_om,pthnet,T)[[1]])
 # Validation
 #####################################
 
-test <- sapply(do.call(c,simulation3),vali); summary(test)
-vali(align_network2(bnnet2,pthnet,T)[[1]])
-vali(align_network2(net_om,pthnet,T)[[1]])
+vali2 <- function(xi,j=3){
+  xi.len <- length(xi)
+  xi <- xi[!sapply(xi,is.null)]
+  xi <- sum(sapply(xi,length)<=j)
+  c(found=xi.len,align=sum(xi),pd=sum(xi)/xi.len)
+}
 
-test <- sapply(do.call(c,simulation3),function(x){vali(x,2)}); summary(test)
-vali(align_network2(bnnet2,pthnet,T)[[1]],2)
-vali(align_network2(net_om,pthnet,T)[[1]],2)
+test <- t(sapply(do.call(c,simulation3),vali2))
+summary(cbind(pd=test[,3],tp=test[,2]/69))
+c(pd=vali2(align_network2(bnnet2,pthnet,T)[[1]])[3],tp=vali2(align_network2(bnnet2,pthnet,T)[[1]])[2]/69)
+c(pd=vali2(align_network2(net_om,pthnet,T)[[1]])[3],tp=vali2(align_network2(net_om,pthnet,T)[[1]])[2]/69)
+
+test <- t(sapply(do.call(c,simulation3),function(x){vali2(x,2)}))
+summary(cbind(pd=test[,3],tp=test[,2]/69))
+c(pd=vali2(align_network2(bnnet2,pthnet,T)[[1]],2)[3],tp=vali2(align_network2(bnnet2,pthnet,T)[[1]],2)[2]/69)
+c(pd=vali2(align_network2(net_om,pthnet,T)[[1]],2)[3],tp=vali2(align_network2(net_om,pthnet,T)[[1]],2)[2]/69)
+
 
 ##################################
 
