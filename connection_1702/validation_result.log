@@ -1,0 +1,16 @@
+> test <- sapply(do.call(c,simulation3),vali); summary(test)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.1000  0.3036  0.3478  0.3487  0.3947  0.6216 
+> vali(align_network2(bnnet2,pthnet,T)[[1]])
+[1] 0.4313725
+> vali(align_network2(net_om,pthnet,T)[[1]])
+[1] 0.5
+> 
+> test <- sapply(do.call(c,simulation3),function(x){vali(x,2)}); summary(test)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.06000 0.08511 0.08761 0.11360 0.27030 
+> vali(align_network2(bnnet2,pthnet,T)[[1]],2)
+[1] 0.2156863
+> vali(align_network2(net_om,pthnet,T)[[1]],2)
+[1] 0.26
+> 
