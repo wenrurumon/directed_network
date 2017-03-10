@@ -343,5 +343,5 @@ plotnet(Y.rlt[[1]],'directed')
 rlt[[length(rlt)+1]] <- list(data=Y,adj=Y.rlt)
 names(rlt)[length(rlt)] <- names(expinpath)[3]
 
-save(rlt,file='expr_network_20170308.rda')
+save(rlt,file='C:/Users/zhu2/Documents/getpathway/model20170215/summary/expr_network_20170308.rda')
 
