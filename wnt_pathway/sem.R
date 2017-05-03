@@ -14,13 +14,12 @@ library(grplasso)
 library(data.table)
 library(dplyr)
 library(igraph)
-
-# node filtered
 rlt.jr <- as.matrix(read.table('clipboard',header=T))
 
-# sem dag
 expr <- expinpath$`Wnt signaling pathway`
 expr <- expr[,colnames(expr)%in%as.vector(rlt.jr)]
-gc();sem <- sparse_2sem(expr,times=100,lambda=0.5)
+gc();sem <- sparse_2sem(expr,times=100,lambda=0.6)
 sum(sem[[1]]>0.8)
-gc();dag <- CNIF(data=expr,init.adj=(sem[[1]]>0.8),max_parent=3)
+gc();dag <- CNIF(data=expr,init.adj=(sem[[1]]>0.8),max_parent=4)
+sem <- sparse_2sem(expr,Y.fixed=dag)[[2]][,c(2,4)]
+
