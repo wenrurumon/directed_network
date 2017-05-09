@@ -1,186 +1,186 @@
-from,to
-Insulin secretion,Hypertension
-Parkinson's disease,Hypertension
-Protein digestion and absorption,Hypertension
-Huntington's disease,Diabete
-Protein digestion and absorption,Diabete
-Protein digestion and absorption,Lewy
-Protein digestion and absorption,Obesity
-Protein digestion and absorption,AD
-Protein digestion and absorption,MCI
-Drug metabolism - other enzymes,Hypertension
-Transcriptional misregulation in cancer,Hypertension
-Neuroactive ligand-receptor interaction,Hypertension
-Signaling pathways regulating pluripotency of stem cells,Hypertension
-Cell adhesion molecules (CAMs),Hypertension
-Leukocyte transendothelial migration,Hypertension
-Hepatitis C,Hypertension
-Cytokine-cytokine receptor interaction,Hypertension
-PI3K-Akt signaling pathway,Hypertension
-Jak-STAT signaling pathway,Hypertension
-Natural killer cell mediated cytotoxicity,Hypertension
-Herpes simplex infection,Hypertension
-Autoimmune thyroid disease,Hypertension
-Pathways in cancer,Hypertension
-Regulation of actin cytoskeleton,Hypertension
-Asthma,Hypertension
-Purine metabolism,Hypertension
-Ribosome biogenesis in eukaryotes,Hypertension
-RNA transport,Hypertension
-Oocyte meiosis,Hypertension
-Glycolysis / Gluconeogenesis,Hypertension
-Graft-versus-host disease,Hypertension
-Systemic lupus erythematosus,Hypertension
-Retinol metabolism,Hypertension
-Malaria,Hypertension
-Hematopoietic cell lineage,Hypertension
-Inflammatory mediator regulation of TRP channels,Hypertension
-Salivary secretion,Hypertension
-Pancreatic secretion,Hypertension
-Bile secretion,Hypertension
-Prolactin signaling pathway,Hypertension
-Serotonergic synapse,Hypertension
-Alcoholism,Hypertension
-Glutathione metabolism,Hypertension
-Starch and sucrose metabolism,Hypertension
-Complement and coagulation cascades,Hypertension
-Taste transduction,Hypertension
-ECM-receptor interaction,Hypertension
-Arachidonic acid metabolism,Hypertension
-Linoleic acid metabolism,Hypertension
-Olfactory transduction,Hypertension
-Steroid hormone biosynthesis,Hypertension
-Transcriptional misregulation in cancer,Diabete
-Neuroactive ligand-receptor interaction,Diabete
-Cell adhesion molecules (CAMs),Diabete
-Cytokine-cytokine receptor interaction,Diabete
-PI3K-Akt signaling pathway,Diabete
-Pathways in cancer,Diabete
-Asthma,Diabete
-Phagosome,Diabete
-Viral carcinogenesis,Diabete
-Systemic lupus erythematosus,Diabete
-Salivary secretion,Diabete
-Bile secretion,Diabete
-Alcoholism,Diabete
-Taste transduction,Diabete
-Carbohydrate digestion and absorption,Diabete
-Chemical carcinogenesis,Diabete
-Arginine and proline metabolism,Diabete
-Olfactory transduction,Diabete
-Transcriptional misregulation in cancer,Lewy
-Neuroactive ligand-receptor interaction,Lewy
-Cytokine-cytokine receptor interaction,Lewy
-PI3K-Akt signaling pathway,Lewy
-Jak-STAT signaling pathway,Lewy
-Natural killer cell mediated cytotoxicity,Lewy
-Phototransduction,Lewy
-Oocyte meiosis,Lewy
-Phagosome,Lewy
-Systemic lupus erythematosus,Lewy
-Retinol metabolism,Lewy
-Amoebiasis,Lewy
-Pancreatic secretion,Lewy
-Alcoholism,Lewy
-Galactose metabolism,Lewy
-Glycerolipid metabolism,Lewy
-Taste transduction,Lewy
-ECM-receptor interaction,Lewy
-PPAR signaling pathway,Lewy
-Metabolism of xenobiotics by cytochrome P450,Lewy
-Olfactory transduction,Lewy
-Steroid hormone biosynthesis,Lewy
-Transcriptional misregulation in cancer,Obesity
-Neuroactive ligand-receptor interaction,Obesity
-Cell adhesion molecules (CAMs),Obesity
-Cytokine-cytokine receptor interaction,Obesity
-PI3K-Akt signaling pathway,Obesity
-Measles,Obesity
-mTOR signaling pathway,Obesity
-Pathways in cancer,Obesity
-Ribosome biogenesis in eukaryotes,Obesity
-Glucagon signaling pathway,Obesity
-Progesterone-mediated oocyte maturation,Obesity
-Phagosome,Obesity
-Systemic lupus erythematosus,Obesity
-Retinol metabolism,Obesity
-Malaria,Obesity
-Hematopoietic cell lineage,Obesity
-Salivary secretion,Obesity
-Pancreatic secretion,Obesity
-Bile secretion,Obesity
-Alcoholism,Obesity
-Oxidative phosphorylation,Obesity
-Taste transduction,Obesity
-Synaptic vesicle cycle,Obesity
-Arachidonic acid metabolism,Obesity
-Drug metabolism - cytochrome P450,Obesity
-Chemical carcinogenesis,Obesity
-Olfactory transduction,Obesity
-Steroid hormone biosynthesis,Obesity
-Fat digestion and absorption,Obesity
-Transcriptional misregulation in cancer,AD
-Neuroactive ligand-receptor interaction,AD
-Cell adhesion molecules (CAMs),AD
-Leukocyte transendothelial migration,AD
-Cytokine-cytokine receptor interaction,AD
-PI3K-Akt signaling pathway,AD
-Natural killer cell mediated cytotoxicity,AD
-Influenza A,AD
-Autoimmune thyroid disease,AD
-Pathways in cancer,AD
-Phototransduction,AD
-Glycolysis / Gluconeogenesis,AD
-Progesterone-mediated oocyte maturation,AD
-Viral carcinogenesis,AD
-Systemic lupus erythematosus,AD
-Ovarian steroidogenesis,AD
-Pancreatic secretion,AD
-Bile secretion,AD
-Serotonergic synapse,AD
-Alcoholism,AD
-Starch and sucrose metabolism,AD
-Complement and coagulation cascades,AD
-Taste transduction,AD
-PPAR signaling pathway,AD
-Tryptophan metabolism,AD
-Carbohydrate digestion and absorption,AD
-Arachidonic acid metabolism,AD
-Cysteine and methionine metabolism,AD
-Metabolism of xenobiotics by cytochrome P450,AD
-Drug metabolism - cytochrome P450,AD
-Chemical carcinogenesis,AD
-Linoleic acid metabolism,AD
-Arginine and proline metabolism,AD
-Olfactory transduction,AD
-Steroid hormone biosynthesis,AD
-Histidine metabolism,AD
-alpha-Linolenic acid metabolism,AD
-Fat digestion and absorption,AD
-Drug metabolism - other enzymes,MCI
-Transcriptional misregulation in cancer,MCI
-Neuroactive ligand-receptor interaction,MCI
-Signaling pathways regulating pluripotency of stem cells,MCI
-Leukocyte transendothelial migration,MCI
-Hepatitis C,MCI
-Cytokine-cytokine receptor interaction,MCI
-PI3K-Akt signaling pathway,MCI
-Jak-STAT signaling pathway,MCI
-Natural killer cell mediated cytotoxicity,MCI
-Maturity onset diabetes of the young,MCI
-Butanoate metabolism,MCI
-RNA transport,MCI
-Viral carcinogenesis,MCI
-Systemic lupus erythematosus,MCI
-Salivary secretion,MCI
-Pancreatic secretion,MCI
-Bile secretion,MCI
-Alcoholism,MCI
-Glycine, serine and threonine metabolism,MCI
-Fanconi anemia pathway,MCI
-Taste transduction,MCI
-PPAR signaling pathway,MCI
-Drug metabolism - cytochrome P450,MCI
-Chemical carcinogenesis,MCI
-Olfactory transduction,MCI
-Steroid hormone biosynthesis,MCI
+from	to
+Insulin secretion	Hypertension
+Parkinson's disease	Hypertension
+Protein digestion and absorption	Hypertension
+Huntington's disease	Diabete
+Protein digestion and absorption	Diabete
+Protein digestion and absorption	Lewy
+Protein digestion and absorption	Obesity
+Protein digestion and absorption	AD
+Protein digestion and absorption	MCI
+Drug metabolism - other enzymes	Hypertension
+Transcriptional misregulation in cancer	Hypertension
+Neuroactive ligand-receptor interaction	Hypertension
+Signaling pathways regulating pluripotency of stem cells	Hypertension
+Cell adhesion molecules (CAMs)	Hypertension
+Leukocyte transendothelial migration	Hypertension
+Hepatitis C	Hypertension
+Cytokine-cytokine receptor interaction	Hypertension
+PI3K-Akt signaling pathway	Hypertension
+Jak-STAT signaling pathway	Hypertension
+Natural killer cell mediated cytotoxicity	Hypertension
+Herpes simplex infection	Hypertension
+Autoimmune thyroid disease	Hypertension
+Pathways in cancer	Hypertension
+Regulation of actin cytoskeleton	Hypertension
+Asthma	Hypertension
+Purine metabolism	Hypertension
+Ribosome biogenesis in eukaryotes	Hypertension
+RNA transport	Hypertension
+Oocyte meiosis	Hypertension
+Glycolysis / Gluconeogenesis	Hypertension
+Graft-versus-host disease	Hypertension
+Systemic lupus erythematosus	Hypertension
+Retinol metabolism	Hypertension
+Malaria	Hypertension
+Hematopoietic cell lineage	Hypertension
+Inflammatory mediator regulation of TRP channels	Hypertension
+Salivary secretion	Hypertension
+Pancreatic secretion	Hypertension
+Bile secretion	Hypertension
+Prolactin signaling pathway	Hypertension
+Serotonergic synapse	Hypertension
+Alcoholism	Hypertension
+Glutathione metabolism	Hypertension
+Starch and sucrose metabolism	Hypertension
+Complement and coagulation cascades	Hypertension
+Taste transduction	Hypertension
+ECM-receptor interaction	Hypertension
+Arachidonic acid metabolism	Hypertension
+Linoleic acid metabolism	Hypertension
+Olfactory transduction	Hypertension
+Steroid hormone biosynthesis	Hypertension
+Transcriptional misregulation in cancer	Diabete
+Neuroactive ligand-receptor interaction	Diabete
+Cell adhesion molecules (CAMs)	Diabete
+Cytokine-cytokine receptor interaction	Diabete
+PI3K-Akt signaling pathway	Diabete
+Pathways in cancer	Diabete
+Asthma	Diabete
+Phagosome	Diabete
+Viral carcinogenesis	Diabete
+Systemic lupus erythematosus	Diabete
+Salivary secretion	Diabete
+Bile secretion	Diabete
+Alcoholism	Diabete
+Taste transduction	Diabete
+Carbohydrate digestion and absorption	Diabete
+Chemical carcinogenesis	Diabete
+Arginine and proline metabolism	Diabete
+Olfactory transduction	Diabete
+Transcriptional misregulation in cancer	Lewy
+Neuroactive ligand-receptor interaction	Lewy
+Cytokine-cytokine receptor interaction	Lewy
+PI3K-Akt signaling pathway	Lewy
+Jak-STAT signaling pathway	Lewy
+Natural killer cell mediated cytotoxicity	Lewy
+Phototransduction	Lewy
+Oocyte meiosis	Lewy
+Phagosome	Lewy
+Systemic lupus erythematosus	Lewy
+Retinol metabolism	Lewy
+Amoebiasis	Lewy
+Pancreatic secretion	Lewy
+Alcoholism	Lewy
+Galactose metabolism	Lewy
+Glycerolipid metabolism	Lewy
+Taste transduction	Lewy
+ECM-receptor interaction	Lewy
+PPAR signaling pathway	Lewy
+Metabolism of xenobiotics by cytochrome P450	Lewy
+Olfactory transduction	Lewy
+Steroid hormone biosynthesis	Lewy
+Transcriptional misregulation in cancer	Obesity
+Neuroactive ligand-receptor interaction	Obesity
+Cell adhesion molecules (CAMs)	Obesity
+Cytokine-cytokine receptor interaction	Obesity
+PI3K-Akt signaling pathway	Obesity
+Measles	Obesity
+mTOR signaling pathway	Obesity
+Pathways in cancer	Obesity
+Ribosome biogenesis in eukaryotes	Obesity
+Glucagon signaling pathway	Obesity
+Progesterone-mediated oocyte maturation	Obesity
+Phagosome	Obesity
+Systemic lupus erythematosus	Obesity
+Retinol metabolism	Obesity
+Malaria	Obesity
+Hematopoietic cell lineage	Obesity
+Salivary secretion	Obesity
+Pancreatic secretion	Obesity
+Bile secretion	Obesity
+Alcoholism	Obesity
+Oxidative phosphorylation	Obesity
+Taste transduction	Obesity
+Synaptic vesicle cycle	Obesity
+Arachidonic acid metabolism	Obesity
+Drug metabolism - cytochrome P450	Obesity
+Chemical carcinogenesis	Obesity
+Olfactory transduction	Obesity
+Steroid hormone biosynthesis	Obesity
+Fat digestion and absorption	Obesity
+Transcriptional misregulation in cancer	AD
+Neuroactive ligand-receptor interaction	AD
+Cell adhesion molecules (CAMs)	AD
+Leukocyte transendothelial migration	AD
+Cytokine-cytokine receptor interaction	AD
+PI3K-Akt signaling pathway	AD
+Natural killer cell mediated cytotoxicity	AD
+Influenza A	AD
+Autoimmune thyroid disease	AD
+Pathways in cancer	AD
+Phototransduction	AD
+Glycolysis / Gluconeogenesis	AD
+Progesterone-mediated oocyte maturation	AD
+Viral carcinogenesis	AD
+Systemic lupus erythematosus	AD
+Ovarian steroidogenesis	AD
+Pancreatic secretion	AD
+Bile secretion	AD
+Serotonergic synapse	AD
+Alcoholism	AD
+Starch and sucrose metabolism	AD
+Complement and coagulation cascades	AD
+Taste transduction	AD
+PPAR signaling pathway	AD
+Tryptophan metabolism	AD
+Carbohydrate digestion and absorption	AD
+Arachidonic acid metabolism	AD
+Cysteine and methionine metabolism	AD
+Metabolism of xenobiotics by cytochrome P450	AD
+Drug metabolism - cytochrome P450	AD
+Chemical carcinogenesis	AD
+Linoleic acid metabolism	AD
+Arginine and proline metabolism	AD
+Olfactory transduction	AD
+Steroid hormone biosynthesis	AD
+Histidine metabolism	AD
+alpha-Linolenic acid metabolism	AD
+Fat digestion and absorption	AD
+Drug metabolism - other enzymes	MCI
+Transcriptional misregulation in cancer	MCI
+Neuroactive ligand-receptor interaction	MCI
+Signaling pathways regulating pluripotency of stem cells	MCI
+Leukocyte transendothelial migration	MCI
+Hepatitis C	MCI
+Cytokine-cytokine receptor interaction	MCI
+PI3K-Akt signaling pathway	MCI
+Jak-STAT signaling pathway	MCI
+Natural killer cell mediated cytotoxicity	MCI
+Maturity onset diabetes of the young	MCI
+Butanoate metabolism	MCI
+RNA transport	MCI
+Viral carcinogenesis	MCI
+Systemic lupus erythematosus	MCI
+Salivary secretion	MCI
+Pancreatic secretion	MCI
+Bile secretion	MCI
+Alcoholism	MCI
+Glycine, serine and threonine metabolism	MCI
+Fanconi anemia pathway	MCI
+Taste transduction	MCI
+PPAR signaling pathway	MCI
+Drug metabolism - cytochrome P450	MCI
+Chemical carcinogenesis	MCI
+Olfactory transduction	MCI
+Steroid hormone biosynthesis	MCI
