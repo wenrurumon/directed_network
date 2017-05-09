@@ -1,0 +1,177 @@
+from	to
+ABC transporters	Percept_Ori
+ABC transporters	Percept_Speed
+ABC transporters	Weight
+ABC transporters	DBP
+Alcoholism	Percept_Ori
+Alcoholism	HDL
+Alcoholism	HDLratio
+Alcoholism	SBP
+Alcoholism	DBP
+Alcoholism	MMSE
+Allograft rejection	BMI
+Allograft rejection	MMSE
+Alzheimer's disease	Percept_Speed
+Alzheimer's disease	Semantic_Memory
+Alzheimer's disease	BMI
+Amino sugar and nucleotide sugar metabolism	BMI
+Amoebiasis	Working_Memory
+Amoebiasis	Weight
+AMPK signaling pathway	CHL
+AMPK signaling pathway	HDLratio
+Amyotrophic lateral sclerosis (ALS)	HDL
+Amyotrophic lateral sclerosis (ALS)	Weight
+Amyotrophic lateral sclerosis (ALS)	DBP
+Arachidonic acid metabolism	Percept_Ori
+Arachidonic acid metabolism	Weight
+Arachidonic acid metabolism	DBP
+Ascorbate and aldarate metabolism	Working_Memory
+Ascorbate and aldarate metabolism	BMI
+Autoimmune thyroid disease	Percept_Ori
+Autoimmune thyroid disease	HDL
+Autoimmune thyroid disease	MMSE
+Bile secretion	HDL
+Bile secretion	Weight
+Biotin metabolism	Weight
+Biotin metabolism	SBP
+Cell adhesion molecules (CAMs)	Percept_Speed
+Cell adhesion molecules (CAMs)	DBP
+Cell adhesion molecules (CAMs)	MMSE
+Cocaine addiction	HDLratio
+Cytokine-cytokine receptor interaction	BMI
+Cytokine-cytokine receptor interaction	Weight
+Drug metabolism - cytochrome P450	HDL
+Drug metabolism - cytochrome P450	Weight
+Drug metabolism - cytochrome P450	MMSE
+Drug metabolism - other enzymes	Percept_Ori
+Drug metabolism - other enzymes	SBP
+Drug metabolism - other enzymes	DBP
+ECM-receptor interaction	DBP
+Fat digestion and absorption	DBP
+Folate biosynthesis	DBP
+Gastric acid secretion	BMI
+Glycerophospholipid metabolism	Percept_Ori
+Glycolysis / Gluconeogenesis	BMI
+Glyoxylate and dicarboxylate metabolism	Weight
+Hedgehog signaling pathway	Working_Memory
+HIF-1 signaling pathway	HDL
+Hippo signaling pathway	Working_Memory
+Hippo signaling pathway	HDLratio
+Hippo signaling pathway	SBP
+Huntington's disease	HDL
+Huntington's disease	HDLratio
+Inflammatory mediator regulation of TRP channels	Semantic_Memory
+Inflammatory mediator regulation of TRP channels	Working_Memory
+Inflammatory mediator regulation of TRP channels	DBP
+Inositol phosphate metabolism	Working_Memory
+Inositol phosphate metabolism	Weight
+Jak-STAT signaling pathway	CHL
+Jak-STAT signaling pathway	HDLratio
+Jak-STAT signaling pathway	BMI
+Jak-STAT signaling pathway	Weight
+Jak-STAT signaling pathway	DBP
+Jak-STAT signaling pathway	MMSE
+Leishmaniasis	DBP
+Linoleic acid metabolism	HDL
+Longevity regulating pathway	HDLratio
+Longevity regulating pathway - multiple species	Percept_Ori
+Longevity regulating pathway - multiple species	DBP
+MAPK signaling pathway	Weight
+Metabolism of xenobiotics by cytochrome P450	HDL
+Metabolism of xenobiotics by cytochrome P450	BMI
+Metabolism of xenobiotics by cytochrome P450	DBP
+Metabolism of xenobiotics by cytochrome P450	MMSE
+Mineral absorption	MMSE
+Morphine addiction	MMSE
+Neuroactive ligand-receptor interaction	Percept_Ori
+Neuroactive ligand-receptor interaction	Working_Memory
+Neuroactive ligand-receptor interaction	HDL
+Neuroactive ligand-receptor interaction	BMI
+Neuroactive ligand-receptor interaction	SBP
+NF-kappa B signaling pathway	MMSE
+Nicotinate and nicotinamide metabolism	Weight
+Nicotine addiction	HDL
+Olfactory transduction	Percept_Ori
+Olfactory transduction	Percept_Speed
+Olfactory transduction	Semantic_Memory
+Olfactory transduction	HDL
+Olfactory transduction	BMI
+Olfactory transduction	Weight
+Olfactory transduction	MMSE
+One carbon pool by folate	DBP
+Pancreatic secretion	Percept_Speed
+Pantothenate and CoA biosynthesis	HDL
+Parkinson's disease	Percept_Ori
+Parkinson's disease	HDL
+Parkinson's disease	HDLratio
+Parkinson's disease	LDL
+Parkinson's disease	BMI
+Parkinson's disease	MMSE
+Pentose and glucuronate interconversions	Percept_Ori
+Pentose and glucuronate interconversions	MMSE
+Pentose phosphate pathway	HDL
+Phosphatidylinositol signaling system	DBP
+Phospholipase D signaling pathway	Percept_Speed
+Phospholipase D signaling pathway	HDLratio
+Phospholipase D signaling pathway	BMI
+Phototransduction	Percept_Speed
+Phototransduction	HDL
+Phototransduction	SBP
+Phototransduction	MMSE
+PI3K-Akt signaling pathway	Working_Memory
+PI3K-Akt signaling pathway	CHL
+PI3K-Akt signaling pathway	BMI
+PI3K-Akt signaling pathway	Weight
+PI3K-Akt signaling pathway	MMSE
+Porphyrin and chlorophyll metabolism	Weight
+Primary bile acid biosynthesis	Working_Memory
+Primary immunodeficiency	BMI
+Primary immunodeficiency	Weight
+Prion diseases	Working_Memory
+Prion diseases	DBP
+Prion diseases	MMSE
+Protein digestion and absorption	Percept_Ori
+Protein digestion and absorption	BMI
+Protein digestion and absorption	Weight
+Protein digestion and absorption	SBP
+Protein digestion and absorption	DBP
+Retinol metabolism	Percept_Ori
+Retinol metabolism	HDL
+Retinol metabolism	BMI
+Retinol metabolism	SBP
+Retinol metabolism	DBP
+Retinol metabolism	MMSE
+Salivary secretion	Weight
+Starch and sucrose metabolism	Semantic_Memory
+Starch and sucrose metabolism	HDL
+Steroid hormone biosynthesis	Percept_Ori
+Steroid hormone biosynthesis	Working_Memory
+Steroid hormone biosynthesis	HDL
+Steroid hormone biosynthesis	BMI
+Steroid hormone biosynthesis	Weight
+Steroid hormone biosynthesis	SBP
+Steroid hormone biosynthesis	DBP
+Steroid hormone biosynthesis	MMSE
+Systemic lupus erythematosus	HDL
+Systemic lupus erythematosus	BMI
+Systemic lupus erythematosus	DBP
+Systemic lupus erythematosus	MMSE
+Taste transduction	Percept_Ori
+Taste transduction	Semantic_Memory
+Taste transduction	Weight
+Taste transduction	MMSE
+TGF-beta signaling pathway	Percept_Ori
+TGF-beta signaling pathway	CHL
+TGF-beta signaling pathway	HDL
+TGF-beta signaling pathway	Weight
+TGF-beta signaling pathway	MMSE
+Ubiquinone and other terpenoid-quinone biosynthesis	HDL
+Ubiquinone and other terpenoid-quinone biosynthesis	Weight
+Ubiquinone and other terpenoid-quinone biosynthesis	MMSE
+VEGF signaling pathway	Semantic_Memory
+Vitamin B6 metabolism	HDL
+Vitamin B6 metabolism	BMI
+Vitamin B6 metabolism	DBP
+Vitamin digestion and absorption	BMI
+Vitamin digestion and absorption	Weight
+Vitamin digestion and absorption	SBP
