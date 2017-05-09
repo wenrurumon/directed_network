@@ -2,6 +2,7 @@
 rm(list=ls())
 library(reshape)
 library(dplyr)
+library(igraph)
 
 mat2df <- function(mat){
   rlt <- filter(melt(mat),value>0)[,1:2,drop=F]
@@ -14,11 +15,13 @@ load("C:/Users/zhu2/Documents/getpathway/model20170215/methylation_net/methylati
 rlt.m2m <- list(data=data.grp,adj=do.call(c,rlt2))
 rlt.m2m$adj <- rlt.m2m$adj[sapply(rlt.m2m$adj,is.matrix)]
 rlt.m2m$df <- do.call(rbind,lapply(rlt.m2m$adj,mat2df))
+rlt.m2m$df <- cbind(paste0('m',rlt.m2m$df[,1]),paste0('m',rlt.m2m$df[,2]))
 
 #expression to expression cross all
 load('C:/Users/zhu2/Documents/getpathway/model20170215/rlt_cluster_network.rda')
 rlt.g2g <- list(data=exprincluster,adj=rlt_all_split,adj_c2c=cluster_network)
-rlt.g2g$df <- do.call(rbind,lapply(rlt.g2g$adj,mat2df))
+rlt.g2g$df <- (do.call(rbind,lapply(rlt.g2g$adj,mat2df)))
+rlt.g2g$df <- cbind(to = rlt.g2g$df[,1], from = rlt.g2g$df[,2])
 
 #qtl, methylation or snp to expression
 load('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\tacc\\qtlresult.rda')
@@ -32,4 +35,6 @@ rlt.qtl$df <- rbind(
 #merged
 mrlt <- rbind(rlt.m2m$df,rlt.g2g$df,rlt.qtl$df); mrlt <- cbind(from=paste(mrlt[,2]),to=paste(mrlt[,1]))
 g <- igraph::graph_from_data_frame(mrlt)
-length(V(g))
+head(mrlt)
+p <- unique(as.vector(mrlt))
+lapply(strsplit(p,':')
