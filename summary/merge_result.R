@@ -45,3 +45,26 @@ rdf.p2d <- read.table('clipboard',header=T,as.is=c('from','to'))
 rdf.p2d <- cbind(rdf.p2d[,2],rdf.p2d[,1])
 rdf.p2p <- read.table('clipboard',header=T,as.is=c('from','to'))
 rdf.p2p <- cbind(rdf.p2p[,2],rdf.p2p[,1])
+rdf.lr <- read.table('clipboard',header=T,as.is=c('from','to'))
+rdf.lr <- cbind(rdf.lr[,2],rdf.lr[,1])
+
+#RESULT
+rlt <- ls(pattern='rdf')
+rlt <- lapply(rlt,function(x){
+  x <- eval(parse(text=x))
+  colnames(x) <- c('to','from')
+  x
+})
+names(rlt) <- ls(pattern='rdf')
+setwd('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\summary_201705\\')
+# save(rlt,file='rdf.rda')
+
+#Summary
+rlt2 <- do.call(rbind,rlt)
+x <- as.matrix(rlt2)
+sel <- substr(x,1,1)%in%c('m','s')&grepl(":",substr(x,3,4))
+xsel <- x[sel]
+xsel <- paste0(substr(xsel,1,1),substr(xsel,regexpr(':',xsel),nchar(xsel)))
+rlt2 <- as.matrix(rlt2)
+rlt2[sel] <- xsel
+rlt2 <- unique(rlt2)
