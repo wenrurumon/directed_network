@@ -38,7 +38,7 @@ rdf.s2m <- gsub('::',':',df_s2mres)
 
 #clipboard from github
 rdf.g2d <- read.table('clipboard',header=T,as.is=c('from','to'))
-rdf.g2d <- cbind(rdf.g2d[,2],rdf.g2d[,1])
+# rdf.g2d <- cbind(rdf.g2d[,2],rdf.g2d[,1])
 rdf.g2p <- read.csv('clipboard',header=T,as.is=c('from','to'))
 rdf.g2p <- cbind(rdf.g2p[,2],rdf.g2p[,1])
 rdf.p2d <- read.table('clipboard',header=T,as.is=c('from','to'))
@@ -57,14 +57,22 @@ rlt <- lapply(rlt,function(x){
 })
 names(rlt) <- ls(pattern='rdf')
 setwd('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\summary_201705\\')
+load('rdf.rda')
 # save(rlt,file='rdf.rda')
 
 #Summary
-rlt2 <- do.call(rbind,rlt)
-x <- as.matrix(rlt2)
+rlt2 <- as.matrix(do.call(rbind,rlt))
+rlt2 <- rlt2[rlt2[,1]!=rlt2[,2],]
+x <- rlt2
 sel <- substr(x,1,1)%in%c('m','s')&grepl(":",substr(x,3,4))
 xsel <- x[sel]
 xsel <- paste0(substr(xsel,1,1),substr(xsel,regexpr(':',xsel),nchar(xsel)))
 rlt2 <- as.matrix(rlt2)
 rlt2[sel] <- xsel
 rlt2 <- unique(rlt2)
+
+g <- igraph::graph_from_data_frame(data.frame(rlt2[,2],rlt2[,1]))
+shortest_paths(g,from='POU3F2',to='AD')
+all_simple_paths(g,from='m:POU3F2')
+
+
