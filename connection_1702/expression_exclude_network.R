@@ -25,9 +25,15 @@ expr_residual <- lapply(gene,function(geney){
   genex <- rlt.g2g$df[which(rlt.g2g$df[,1]==geney),2]
   y <- gdata[,match(geney,gene)]
   if(length(genex)==0){
-    return(y)
+    res <- y
   } else {
     x <- gdata[,match(genex,gene)]
-    return(lm(y~x)$residual)
+    res <- lm(y~x)$residual
   }
+  res <- cbind(res)
+  colnames(res) <- geney
+  res
 })
+
+setwd('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\tacc')
+save(expr_residual,file='expr_residual.rda')
