@@ -93,6 +93,6 @@ rlt <- sapply(1:nrow(df),function(i){
 })
 rlt2 <- rlt * length(mdata.res) * length(snpdata)
 
-df_s2m <- df[rlt2<0.01,]
+df_s2mres <- df[rlt2<0.01,]
 setwd('/home/zhu/rushdata/residual_model')
-save(df_s2m,file='df_s2m.rda')
+save(df_s2m,file='df_s2mres.rda')
