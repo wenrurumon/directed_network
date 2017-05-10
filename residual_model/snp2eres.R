@@ -63,7 +63,7 @@ setwd('/home/zhu/rushdata/tacc')
 load('expr_residual.rda')
 names(expr_residual) <- sapply(expr_residual,colnames)
 
-#snp2mfpca
+#df
 setwd('/home/zhu/rushdata/tacc/rlt')
 load('qtlresult.rda')
 df <- cbind(to=paste(rlt[[1]][,1]),from=paste0('s',rlt[[1]][,2]))
