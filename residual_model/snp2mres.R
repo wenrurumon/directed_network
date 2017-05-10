@@ -95,4 +95,4 @@ rlt2 <- rlt * length(mdata.res) * length(snpdata)
 
 df_s2mres <- df[rlt2<0.01,]
 setwd('/home/zhu/rushdata/residual_model')
-save(df_s2m,file='df_s2mres.rda')
+save(df_s2mres,file='df_s2mres.rda')
