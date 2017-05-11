@@ -71,8 +71,16 @@ rlt2 <- as.matrix(rlt2)
 rlt2[sel] <- xsel
 rlt2 <- unique(rlt2)
 
-g <- igraph::graph_from_data_frame(data.frame(rlt2[,2],rlt2[,1]))
-shortest_paths(g,from='POU3F2',to='AD')
-all_simple_paths(g,from='m:POU3F2')
+# g <- igraph::graph_from_data_frame(data.frame(rlt2[,2],rlt2[,1]))
+# shortest_paths(g,from='m:APOE',to='AD')
+# all_simple_paths(g,from='m:POU3F2')
 
-
+n.phe <- cbind('phe',unique(c(as.vector(rlt$rdf.p2p),as.vector(rlt$rdf.p2d[,2]),as.vector(rlt$rdf.g2p[,1]))))
+n.d <- cbind('d',unique(as.vector(rlt$rdf.p2d[,1])))
+n.m <- cbind('m',unique(grep('m:',rlt2,value=T)))
+n.s <- cbind('s',unique(grep('s:',rlt2,value=T)))
+n.g <- cbind('g',unique(as.vector(rlt2)[!as.vector(rlt2)%in%c(n.phe,n.d,n.m,n.s)]))
+node <- rbind(n.phe,n.d,n.m,n.s,n.g)
+nodelist <- list(phe=n.phe,d=n.d,m=n.m,s=n.s,g=n.g)
+sapply(nodelist,function(x){nrow(unique(x))})
+rlt3 <- apply(cbind(node[match(rlt2[,1],node[,2]),1],node[match(rlt2[,2],node[,2]),1]),1,paste,collapse=',')
