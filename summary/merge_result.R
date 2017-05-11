@@ -109,3 +109,5 @@ rltsel <- cbind(rltsel,
 nodecount <- (unique(c(paste(rltsel[,3],rltsel[,1]),paste(rltsel[,4],rltsel[,2]))))
 table(sapply(strsplit(nodecount,' '),function(x) x[[1]]))
 table(paste(rltsel[,4],rltsel[,3]))
+
+             
