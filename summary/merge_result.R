@@ -55,10 +55,19 @@ rlt <- lapply(rlt,function(x){
   colnames(x) <- c('to','from')
   x
 })
+
+#ms2pres
 names(rlt) <- ls(pattern='rdf')
 setwd('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\summary_201705\\')
-load('rdf.rda')
+rm(list=ls());load('rdf.rda')
+# load('C:\\Users\\zhu2\\Documents\\getpathway\\model20170215\\tacc\\df_ms2pres.rda')
+# rlt$ms2pres <- df_ms2pres
 # save(rlt,file='rdf.rda')
+
+################################################
+
+
+################################################
 
 #Summary
 rlt2 <- as.matrix(do.call(rbind,rlt))
@@ -84,3 +93,19 @@ node <- rbind(n.phe,n.d,n.m,n.s,n.g)
 nodelist <- list(phe=n.phe,d=n.d,m=n.m,s=n.s,g=n.g)
 sapply(nodelist,function(x){nrow(unique(x))})
 rlt3 <- apply(cbind(node[match(rlt2[,1],node[,2]),1],node[match(rlt2[,2],node[,2]),1]),1,paste,collapse=',')
+table(rlt3)
+
+g <- graph_from_data_frame(data.frame(rlt2[,2],rlt2[,1]))
+g.cut <- components(g)
+gsel <- names(which(g.cut[[1]]==1))
+
+rltsel <- rlt2[rlt2[,1]%in%gsel&rlt2[,2]%in%gsel,]
+nodemap <- do.call(rbind,nodelist)
+rltsel <- cbind(rltsel,
+  nodemap[match(rltsel[,1],nodemap[,2]),1],
+  nodemap[match(rltsel[,2],nodemap[,2]),1]
+)
+
+nodecount <- (unique(c(paste(rltsel[,3],rltsel[,1]),paste(rltsel[,4],rltsel[,2]))))
+table(sapply(strsplit(nodecount,' '),function(x) x[[1]]))
+table(paste(rltsel[,4],rltsel[,3]))
