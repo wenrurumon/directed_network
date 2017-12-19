@@ -14,3 +14,18 @@ genelist2 <- lapply(kegg,function(x){
   x <- x[1:(length(x)/2)*2]
   substr(x,2,nchar(x)-1)
 })
+genelist2 <- unique(genelist2)
+
+expinpath <- do.call(cbind,lapply(expinpath,scale))
+exp1 <- expinpath[,match(genelist1,colnames(expinpath))]
+exp2 <- lapply(genelist2,function(x){
+  x <- expinpath[,match(x,colnames(expinpath)),drop=F]
+  x[is.na(x)] <- 0
+  x[,apply(x,2,var)>0,drop=F]
+})
+exp2 <- exp2[sapply(exp2,ncol)>0]
+exp2.gene <- sapply(exp2,function(x){colnames(x)[1]})
+exp2.prop <- sapply(exp2,function(x){qpca(x)$prop[1]})
+exp2 <- sapply(exp2,function(x) qpca(x)$X[,1,drop=F])
+colnames(exp2) <- exp2.gene
+save(genelist1,genelist2,exp1,exp2,file='AD_data.rda')
