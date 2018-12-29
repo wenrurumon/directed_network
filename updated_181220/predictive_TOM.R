@@ -1,4 +1,3 @@
-
 rm(list=ls())
 library(igraph)
 library(WGCNA)
@@ -48,6 +47,3 @@ diag(tom_rlt)
 tom_res <- (abs(pred_tom_test-expr_test)) 
 mean(colMeans(tom_res))
 quantile(colMeans(tom_res))
-
-#       0%       25%       50%       75%      100% 
-#0.1391613 0.3028543 0.4160545 0.5482382 0.9674336 
