@@ -9,6 +9,7 @@ sourceCpp("score_function_regression.cpp")
 sourceCpp("simple_cycle.cpp")
 sourceCpp("initial_sem.cpp")
 library(pcalg)
+library(WGCNA)
 
 rdata <- function(x){rnorm(x)}
 align_mat <- function(x,y){
@@ -49,7 +50,7 @@ minmax <- function(x){
 # Dummy data
 
 set.seed(12345)
-mp <- 3
+mp <- 2
 mat <- randomDAG(30,0.1)
 plot(mat)
 data.mat <- unlist(mat@edgeL)
@@ -73,7 +74,9 @@ cor.mat <- function(x){
       cor.test(i,j)$p.value
     })
   })
-  cor.mat <- (cor.mat <= (0.000005/length(cor.mat)))
+  # cor.mat <- (cor.mat <= (0.000005/length(cor.mat)))
+  diag(cor.mat) <- 1
+  cor.mat <- (cor.mat <= quantile(cor.mat,0.05))
   (cor.mat+0)
 }
 align_mat(cor.mat(x),(mat+t(mat)))
@@ -82,7 +85,21 @@ align_mat(cor.mat(x),(mat+t(mat)))
 
 sem.mat <- sparse_2sem(x,lambda=0.1)[[1]]
 align_mat(sem.mat,mat+t(mat))
-sem.cnif <- CNIF(data = x,init.adj = sem.mat,max_parent = 3)
+sem.cnif <- CNIF(data = x,init.adj = sem.mat,max_parent = mp)
 align_mat(sem.cnif+t(sem.cnif),mat+t(mat))
 
-#
+#TOM
+
+TOM <- TOMsimilarityFromExpr(x,power=6)
+dimnames(TOM) <- list(colnames(x),colnames(x))
+diag(TOM) <- 0
+cenet <- (TOM>=quantile(TOM,0.95));sum(cenet)
+align_mat(cenet,(mat+t(mat)))
+
+rlt <- list(
+  cor = align_mat(cor.mat(x),(mat+t(mat))),
+  sem = align_mat(sem.mat,mat+t(mat)),
+  cnif = align_mat(sem.cnif+t(sem.cnif),mat+t(mat)),
+  tom = align_mat(cenet,(mat+t(mat))),
+  cnif2 = align_mat(sem.cnif,mat)
+)
