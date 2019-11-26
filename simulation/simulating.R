@@ -1,4 +1,3 @@
-
 rm(list=ls())
 setwd('E:\\sample')
 
@@ -16,9 +15,10 @@ align_mat <- function(x,y){
   diag(x) <- 0
   diag(y) <- 0
   x <- which(as.vector(x)>0)
+  yneg <- which(as.vector(y)==0)
   y <- which(as.vector(y)>0)
   power <- mean(y%in%x)
-  fdr <- 1-mean(x%in%y)
+  fdr <- mean(x%in%yneg)
   c(POWER=power,FDR=fdr)
 }
 rexpr <- function(mat,nsample=500,dummy=0){
@@ -92,20 +92,44 @@ simulation <- function(seed,mp=2,Ncol=50,Nsample=500,lambda=0.1,dummy_rate=0.1){
   rlt
 }
 
-s_100 <- lapply(1:1000,function(i){
-  print(paste('Simulation',i))
+testlist <- c(1:100)
+faillist <- c(519,916)
+testlist <- testlist[!testlist%in%faillist]
+s_100 <- lapply(testlist,function(i){
+  print(paste('Simulation 100',i))
+  gc()
   simulation(i,2,50,100,0.1,0.1)
 })
-s_300 <- lapply(1:1000,function(i){
-  print(paste('Simulation',i))
+save(s_100,file='s100.rda')
+t(sapply(s_100,function(x){do.call(rbind,x)[,1]}))
+
+
+testlist <- c(1:100)
+faillist <- c(918)
+testlist <- testlist[!testlist%in%faillist]
+s_300 <- lapply(testlist,function(i){
+  print(paste('Simulation 300',i))
+  gc()
   simulation(i,2,50,300,0.1,0.1)
 })
-s_500 <- lapply(1:1000,function(i){
-  print(paste('Simulation',i))
+save(s_300,file='s300.rda')
+
+testlist <- c(1:100)
+faillist <- c()
+testlist <- testlist[!testlist%in%faillist]
+s_500 <- lapply(testlist,function(i){
+  print(paste('Simulation 500',i))
+  gc()
   simulation(i,2,50,500,0.1,0.1)
 })
-s_1000 <- lapply(1:1000,function(i){
-  print(paste('Simulation',i))
+save(s_500,file='s500.rda')
+
+testlist <- c(1:100)
+faillist <- c()
+testlist <- testlist[!testlist%in%faillist]
+s_1000 <- lapply(testlist,function(i){
+  print(paste('Simulation 1000',i))
+  gc()
   simulation(i,2,50,1000,0.1,0.1)
 })
-
+save(s_1000,file='s1000.rda')
