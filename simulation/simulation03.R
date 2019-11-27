@@ -170,7 +170,27 @@ simu <- function(seed,mp=2,Ncol1=40,Ncol2=10,Nsample=500,lambda=0.1,dummy_rate=0
   do.call(rbind,do.call(c,list(rlt1,rlt2,rlt3,rlt4)))
 }
 
-test100 <- lapply(1:100,simu,Nsample=100)
-test300 <- lapply(1:100,simu,Nsample=300)
-test500 <- lapply(1:100,simu,Nsample=500)
-test1000 <- lapply(1:100,simu,Nsample=1000)
+test100 <- lapply(1:100,simu,Nsample=100) %>% dst
+test300 <- lapply(1:100,simu,Nsample=300) %>% dst
+test500 <- lapply(1:100,simu,Nsample=500) %>% dst
+test1000 <- lapply(1:100,simu,Nsample=1000) %>% dst
+
+dst <- function(x){
+  p1 <- sapply(x,function(x){x[,1]})
+  p2 <- sapply(x,function(x){x[,3]})
+  f1 <- sapply(x,function(x){x[,2]})
+  f2 <- sapply(x,function(x){x[,4]})
+  rlt <- cbind(
+    poewr1 = apply(p1,1,mean),
+    FDR1 = apply(f1,1,mean),
+    power2 = apply(p2,1,mean),
+    FDR1 = apply(f2,1,mean)
+  )
+  rownames(rlt) <- c(
+    'correlation','correlation_wgeno',
+    'coexpression','coexpression_wgeno',
+    'SEM','SEM_wgeno',
+    'CNIF','CNIF_wgeno'
+  )
+  list(rlt=x,summary=rlt)
+}
